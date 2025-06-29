@@ -1,1 +1,1 @@
-# CTS_tool
+run retry --retry 2 --exclude-filter CtsDeqpTestCases  --exclude-filter CtsDeqpGles3TestCases --exclude-filter CtsDeqpGles31TestCases --exclude-filter CtsDeqpVulkanTestCases --exclude-filter CtsVulkanTestCases --exclude-filter CtsGpuTestCases
