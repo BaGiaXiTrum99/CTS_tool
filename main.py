@@ -2,6 +2,7 @@ import argparse
 from src.create_subsplans_xml.create_subplans_xml import *
 from src.gen_report_excel.ResultXMLParser import *
 from src.gen_report_excel.ResultXMLParser_CTS_V import *
+from src.avd_handler.avd_handler import *
 from utils.logging_setup import *
 from dotenv import load_dotenv
 
@@ -53,6 +54,11 @@ def handle_gen_report_CTS_V(args):
     parser = ResultXMLParser_CTS_V(args.path,args.time_unit)
     parser.parser_all_modules()
 
+def handle_avd(args):
+    logger.info(f"Running Feature Keep AVD alive with args: {args}")
+    avd = AVDHandler(args.name,args.emulator_path,args.timeout)
+    avd.keep_avd_alive()
+
 def main():
     load_dotenv()
     parser = argparse.ArgumentParser(description="Tool đa chức năng cho CTS")
@@ -88,6 +94,13 @@ def main():
     report_ctsV_parser.add_argument("--path", required=False, default = './data/CTS_V', help="Thư mục chứa test_result.xml")
     report_ctsV_parser.add_argument("--time_unit", choices=["ms", "s", "h/m/s"], default="h/m/s", help="Đơn vị thời gian")
     report_ctsV_parser.set_defaults(func=handle_gen_report_CTS_V)
+
+    # --- Feature 3: Restart AVD ---
+    avd = subparsers.add_parser("keep-avd-alive", help="Tự động khởi động lại avd nếu bị crash")
+    avd.add_argument("--name", required=False, default = 'Automotive_1408p_landscape_with_Google_Play_1', help="AVD name")
+    avd.add_argument("--emulator_path", required=False, default = '/home/vmo/Android/Sdk/emulator/emulator', help="Đường dẫn tới android emulator")
+    avd.add_argument("--timeout", type=int, default = 2, help="Timeout (days) của feature này")
+    avd.set_defaults(func=handle_avd)
 
     # Parse và gọi hàm tương ứng
     args = parser.parse_args()
