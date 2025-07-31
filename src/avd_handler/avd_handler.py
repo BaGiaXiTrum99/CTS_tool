@@ -9,15 +9,19 @@ logger = logging.getLogger("cts_logger." + __name__)
 CTS_PROCESS_NAME = "cts-tradefed"
 
 class AVDHandler:
-    def __init__(self,name,emulator_path,timeout):
+    def __init__(self, name : str, emulator_path : str, timeout : int, is_headless : bool):
         self.name = name
         self.emulator_path = emulator_path
         self.max_runtime = timedelta(timeout)
         self.start_time = datetime.now()
+        self.is_headless = is_headless
 
     def __start_avd(self):
         logger.info(f"[Watchdog] Starting AVD '{self.name}'...")
-        Commands.execute_timeout_cmd(f'{self.emulator_path} -avd "{self.name}" -no-snapshot -no-audio -wipe-data',timeout=None) 
+        if self.is_headless == True:
+            Commands.execute_timeout_cmd(f'{self.emulator_path} -avd "{self.name}" -no-snapshot -no-audio -wipe-data -no-window',timeout=None) 
+        else:
+            Commands.execute_timeout_cmd(f'{self.emulator_path} -avd "{self.name}" -no-snapshot -wipe-data',timeout=None) 
         time.sleep(5)
 
     def __close_avd(self):
