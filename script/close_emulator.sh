@@ -1,21 +1,24 @@
 #!/bin/bash
 
-# Lấy danh sách PID từ jobs -l (cột thứ 2)
-PIDS=$(jobs -l | awk '{print $2}')
+echo "📋 Đang tìm và dừng tất cả tiến trình emulator Android đang chạy..."
 
-# Nếu không có tiến trình nền
+# Lấy danh sách PID của tất cả emulator đang chạy (có thể là emulator hoặc qemu-system)
+PIDS=$(pgrep -f "emulator.*-avd")
+
+# Kiểm tra nếu không có PID nào
 if [ -z "$PIDS" ]; then
-    echo "✅ Không có tiến trình nền nào đang chạy."
+    echo "✅ Không có emulator nào đang chạy."
+else
+    echo "📋 Các PID emulator sẽ bị dừng:"
+    echo "$PIDS"
+
+    # Dừng từng PID
+    for pid in $PIDS; do
+        echo "🛑 Đang dừng PID $pid..."
+        kill "$pid"
+    done
+
+    echo "✅ Tất cả emulator đã được yêu cầu dừng."
 fi
 
-echo "📋 Đang dừng các tiến trình nền sau:"
-echo "$PIDS"
-
-# Dừng tất cả PID đã lấy được
-for pid in $PIDS; do
-    echo "🛑 Dừng PID $pid..."
-    kill "$pid"
-done
-
-echo "✅ Tất cả tiến trình nền đã được dừng."
 read -rp "Nhấn Enter để thoát..."
