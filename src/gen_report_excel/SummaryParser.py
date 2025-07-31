@@ -1,9 +1,9 @@
 import re
 from typing import List
-from utils.logger import get_logger
+import logging
 from utils.time_caculation import *
 
-logger = get_logger()
+logger = logging.getLogger("cts_logger." + __name__)
 
 class SummaryParser:
     def __init__(self, path: str, abi: str = "x86_64") -> None:

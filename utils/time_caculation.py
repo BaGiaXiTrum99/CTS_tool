@@ -1,4 +1,3 @@
-import enum
 import re
 
 def parse_duration(duration_str):
@@ -33,7 +32,3 @@ def sum_durations(*arg):
     total_seconds = sum(parse_duration(d) for d in arg)
     return format_duration(total_seconds)
 
-class TimeUnit(enum.Enum):
-    HMS = "h/m/s"
-    MS  = "ms"
-    S   = "s" 

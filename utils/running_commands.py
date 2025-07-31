@@ -1,9 +1,9 @@
 import subprocess
 import time 
 import keyboard
-from utils.logger import get_logger
+import logging
 
-logger = get_logger() 
+logger = logging.getLogger("cts_logger." + __name__)
 
 class Commands:
     @staticmethod
@@ -16,11 +16,14 @@ class Commands:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             stdin=subprocess.DEVNULL,
-            text=True  # Decode bytes to str
+            text=True,  # Decode bytes to str
+            check=False
         )       
 
         stdout , stderr = process.communicate()
-        logger.debug(f"Closing process")
+        logger.info(f"Closing process")
+        logger.debug(f"Output : ", stdout)
+        logger.debug(f"Error : ", stderr)
         return stdout , stderr
 
     @staticmethod
@@ -35,7 +38,8 @@ class Commands:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             stdin=subprocess.DEVNULL,
-            text=True
+            text=True,
+            check=False
         )
         try:
             while time.time() - start_time < timeout:
@@ -43,8 +47,10 @@ class Commands:
                     logger.debug(f"User Cancellation")
                     break
                 stdout, stderr = process.stdout.read(),process.stderr.read() # type: ignore
+                logger.debug(f"Output : ", stdout)
+                logger.debug(f"Error : ", stderr)
         finally:
-            logger.debug(f"Closing process")
+            logger.info(f"Closing process")
             process.terminate()
             stdout, stderr = None , None
         

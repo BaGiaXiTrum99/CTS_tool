@@ -1,7 +1,7 @@
-from utils.logger import get_logger
+import logging
 import xml.etree.cElementTree as ET
 
-logger = get_logger()
+logger = logging.getLogger("cts_logger." + __name__)
 
 class SubplansParser:
     def __init__(self,output_path : str) -> None:

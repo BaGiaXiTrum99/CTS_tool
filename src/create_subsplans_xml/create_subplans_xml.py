@@ -1,17 +1,17 @@
 import re
 import os
 import math
-from utils.logger import get_logger
+import logging
 from utils.running_commands import Commands
 
-logger = get_logger()
+logger = logging.getLogger("cts_logger." + __name__)
 
 class SubplanGenerator:
     def __init__(self, module_list : list[str] | None, folder_path : str , file_num : int) -> None:
         logger.info("Generate Subplans Feature")
         if module_list is None:
             logger.info("Auto Capture Modules from DUT")
-            self.module_list = self.get_module_list_exist_in_DUT()
+            self.module_list = self.__get_module_list_exist_in_DUT()
         else:
             logger.info("Capture Modules from Input")
             self.module_list = module_list
@@ -42,9 +42,8 @@ class SubplanGenerator:
             logger.info(f"Write modules to file {separate_filename}")
             self.__write_module_to_file(module_chunk,separate_filename)
 
-    @staticmethod
-    def get_module_list_exist_in_DUT() -> list[str]:
-        cmd: str | list = "/home/ubuntu/Documents/Cienet/GAS_Cert/CTS/android-cts-14_r8-linux_x86-x86/android-cts/tools/cts-tradefed list modules"
+    def __get_module_list_exist_in_DUT(self) -> list[str]:
+        cmd: str | list = "/home/vmo/Documents/CIenet/CTS/android-cts-14_r7-linux_x86-x86/android-cts/tools/cts-tradefed list modules"
         stdout, _ = Commands.execute_short_cmd(cmd)
 
         # Bắt các dòng bắt đầu bằng x86_64 hoặc x86 và không có [secondary_user]
