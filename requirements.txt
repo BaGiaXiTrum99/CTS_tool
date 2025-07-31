@@ -1,2 +1,4 @@
 keyboard
 openpyxl
+python-dotenv
+psutil

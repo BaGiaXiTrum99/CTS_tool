@@ -1,0 +1,23 @@
+from enum import Enum
+
+class TimeUnit(Enum):
+    HMS = "h/m/s"
+    MS  = "ms"
+    S   = "s" 
+
+class ReportColumn(Enum):
+    NO = "No"
+    MODULES = "Modules"
+    PASSED = "Passed"
+    FAILED = "Failed"
+    ASSUMPTION_FAILURE = "Assumption Failure"
+    IGNORED = "Ignored"
+    TOTAL = "Total"
+    DONE = "Done"
+    EXECUTION_TIME = "Execution Time"
+
+class ReportColumnCTS_V(Enum):
+    NO = "No"
+    TEST = "Test"
+    RESULT = "Result"
+    EXECUTION_TIME = "Execution Time"

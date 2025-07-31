@@ -3,3 +3,4 @@ subplans
 data
 result
 __pycache__
+.venv
