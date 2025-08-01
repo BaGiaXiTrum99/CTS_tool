@@ -7,6 +7,7 @@ from utils.running_commands import Commands
 
 logger = logging.getLogger("cts_logger." + __name__)
 CTS_PROCESS_NAME = "cts-tradefed"
+AVD_PROCESS_NAME = "qemu-system-x86_64"
 
 class AVDHandler:
     def __init__(self, name : str, emulator_path : str, timeout : int, is_headless : bool):
@@ -35,16 +36,21 @@ class AVDHandler:
             logger.info("[Watchdog] Not found any PID AVD running, exiting")
 
     def __check_avd_PID(self):
-        cmd : str | list = 'pgrep -f emulator.*-avd'
-        stdout, _ = Commands.execute_short_cmd(cmd)
-        return stdout.strip()
+        for proc in psutil.process_iter(['name', 'cmdline']):
+            try:
+                if AVD_PROCESS_NAME in proc.info['name']:
+                    logger.info(f"[Watchdog] Found AVD is running at proc: {proc}")
+                    return proc.pid
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                logger.debug(f"No need to care about this process {proc}")
+                continue
+        return None
     
     def is_avd_running(self):
         avd_pid = self.__check_avd_PID()
 
         # Nếu có output thì AVD đang chạy
-        if avd_pid.strip():
-            logger.info(f"[Watchdog] AVD running with PID: {avd_pid.strip()}")
+        if avd_pid is not None:
             return True
         else:
             logger.info("[Watchdog] No AVD is running")
@@ -53,9 +59,8 @@ class AVDHandler:
     def is_cts_running(self):
         for proc in psutil.process_iter(['name', 'cmdline']):
             try:
-                if CTS_PROCESS_NAME in proc.info['name'] or \
-                any(CTS_PROCESS_NAME in part for part in proc.info['cmdline']):
-                    logger.debug(f"[Watchdog] Found CTS TF is running at proc: {proc}")
+                if CTS_PROCESS_NAME in proc.info['name']:
+                    logger.info(f"[Watchdog] Found CTS TF is running at proc: {proc}")
                     return True
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 continue
@@ -73,7 +78,7 @@ class AVDHandler:
                 self.__close_avd()
                 break
             elif not self.is_avd_running():
-                logger.info("[Watchdog] AVD not running. Restarting...")
+                logger.info("[Watchdog] AVD is not running. Restarting...")
                 self.__start_avd()
             else:
                 logger.info("[Watchdog] AVD is running.")

@@ -21,7 +21,7 @@ class Commands:
         stdout , stderr = process.communicate()
         logger.info(f"Closing process for command {cmd}")
         logger.debug(f"Output : {stdout}")
-        logger.debug(f"Error : {stderr}")
+        logger.error(f"Error : {stderr}")
         return stdout , stderr
 
     @staticmethod
@@ -49,7 +49,7 @@ class Commands:
                 while time.time() - start_time < timeout:
                     stdout, stderr = process.stdout.read(),process.stderr.read() # type: ignore
                     logger.debug(f"Output : {stdout}")
-                    logger.debug(f"Error : {stderr}")
+                    logger.error(f"Error : {stderr}")
             finally:
                 logger.info(f"Closing process for command {cmd}")
                 process.terminate()

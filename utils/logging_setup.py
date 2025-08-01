@@ -1,5 +1,21 @@
 import logging
 import os
+from colorama import init, Fore, Style
+init(autoreset=True)
+
+class ColoredFormatter(logging.Formatter):
+    COLORS = {
+        logging.DEBUG: Fore.CYAN,
+        logging.INFO: Fore.GREEN,
+        logging.WARNING: Fore.YELLOW,
+        logging.ERROR: Fore.RED,
+        logging.CRITICAL: Fore.MAGENTA + Style.BRIGHT
+    }
+
+    def format(self, record):
+        color = self.COLORS.get(record.levelno, "")
+        message = super().format(record)
+        return color + message + Style.RESET_ALL
 
 # Khởi tạo đối tượng logger chung, đặt tên là "cts_logger"
 # Các module khác sẽ lấy logger này bằng cách gọi getLogger("cts_logger")
@@ -25,11 +41,15 @@ def configure_logger(level_str: str, log_file: str = "logs/cts.log"):
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
 
     # Console Handler
+    color_formatter = ColoredFormatter('%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
     console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
+    console_handler.setFormatter(color_formatter)
     app_logger.addHandler(console_handler)
 
     # File Handler
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # thư mục chứa file logger
+    log_file = os.path.join(base_dir, "logs", "cts.log")   # logs/cts.log nằm trong CTS_Tool
+
     log_dir = os.path.dirname(log_file)
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)

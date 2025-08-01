@@ -148,7 +148,7 @@ python3 main.py keep-alive-avd [tùy_chọn]
 ├── utils/
 │   ├── __init__.py
 │   ├── constants.py            # Định nghĩa các hằng số (TimeUnit, ReportColumn) được sử dụng trong dự án.
-│   ├── logger.py               # Cấu hình hệ thống ghi log.
+│   ├── logging_setup.py        # Cấu hình hệ thống ghi log.
 │   ├── running_commands.py     # Cung cấp các hàm để thực thi các lệnh shell.
 │   └── time_caculation.py      # Các hàm tiện ích để phân tích và định dạng thời gian.
 ├── script/
