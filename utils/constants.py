@@ -21,3 +21,8 @@ class ReportColumnCTS_V(Enum):
     TEST = "Test"
     RESULT = "Result"
     EXECUTION_TIME = "Execution Time"
+
+class CTSRetryType(Enum):
+    DEFAULT = "DEFAULT"
+    NOT_EXECUTED = "NOT_EXECUTED"
+    FAILED = "FAILED"

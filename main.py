@@ -4,6 +4,7 @@ from src.create_subsplans_xml.create_subplans_xml import *
 from src.gen_report_excel.ResultXMLParser import *
 from src.gen_report_excel.ResultXMLParser_CTS_V import *
 from src.avd_handler.avd_handler import *
+from src.cts_handler.cts_handler import *
 from utils.logging_setup import *
 from dotenv import load_dotenv
 
@@ -60,6 +61,11 @@ def handle_avd(args):
     avd = AVDHandler(args.name,args.emulator_path,args.timeout,args.is_headless)
     avd.keep_avd_alive()
 
+def handle_cts_runner(args):
+    logger.info(f"Running Feature Run CTS continuously with args: {args}")
+    cts_runner = CTSHandler(args.android_cts_path,args.cmd,args.retry_time,args.retry_type,args.need_avd_alive)
+    cts_runner.run()
+
 def main():
     load_dotenv()
     parser = argparse.ArgumentParser(description="Tool đa chức năng cho CTS")
@@ -93,16 +99,25 @@ def main():
     # --- Feature 2: gen-report CTS-V ---
     report_ctsV_parser = subparsers.add_parser("gen-report-CTS-V", help="Phân tích kết quả và sinh báo cáo Excel CTS")
     report_ctsV_parser.add_argument("--path", required=False, default = './data/CTS_V', help="Thư mục chứa test_result.xml")
-    report_ctsV_parser.add_argument("--time_unit", choices=["ms", "s", "h/m/s"], default="h/m/s", help="Đơn vị thời gian")
+    report_ctsV_parser.add_argument("--time_unit", choices=[timeunit.value for timeunit in TimeUnit], default=TimeUnit.HMS.value, help="Đơn vị thời gian")
     report_ctsV_parser.set_defaults(func=handle_gen_report_CTS_V)
 
     # --- Feature 3: Restart AVD ---
-    avd = subparsers.add_parser("keep-avd-alive", help="Tự động khởi động lại avd nếu bị crash")
-    avd.add_argument("--name", required=False, default = 'Automotive_1408p_landscape_with_Google_Play_1', help="AVD name")
-    avd.add_argument("--emulator_path", required=False, default = '/home/'+getpass.getuser()+'/Android/Sdk/emulator/emulator', help="Đường dẫn tới android emulator")
-    avd.add_argument("--timeout", type=int, default = 2, help="Timeout (days) của feature này")
-    avd.add_argument("--is_headless", type=str, default = "False", help="True nếu chạy avd ở chế độ headless")
-    avd.set_defaults(func=handle_avd)
+    avd_parser = subparsers.add_parser("keep-avd-alive", help="Tự động khởi động lại avd nếu bị crash")
+    avd_parser.add_argument("--name", required=False, default = 'Automotive_1408p_landscape_with_Google_Play_1', help="AVD name")
+    avd_parser.add_argument("--emulator_path", required=False, default = '/home/'+getpass.getuser()+'/Android/Sdk/emulator/emulator', help="Đường dẫn tới android emulator")
+    avd_parser.add_argument("--timeout", type=int, default = 2, help="Timeout (days) của feature này")
+    avd_parser.add_argument("--is_headless", type=str, default = "False", help="True nếu chạy avd ở chế độ headless")
+    avd_parser.set_defaults(func=handle_avd)
+
+    # --- Feature 4: Run CTS Continuously ---
+    cts_runner_parser = subparsers.add_parser("cts-runner", help="Tự động chạy CTS command và retry theo option")
+    cts_runner_parser.add_argument("--android_cts_path",required=False, default = '/home/'+getpass.getuser()+'/Documents/CTS/'+os.getenv("CTS_VERSION_NAME","android-cts-14_r7-linux_x86-x86")+'/android-cts', help = 'Đường dẫn tới thư mục andoird-cts')
+    cts_runner_parser.add_argument("--cmd", required=False, default = os.getenv("CTS_COMMAND", "run cts -m CtsTextTestCases"), help="Command chạy CTS trong CTS-Tradefed")
+    cts_runner_parser.add_argument("--retry_time",required=False, type = int, default = os.getenv("CTS_RETRY_TIME", 5), help = "Số lần retry ( không bao gồm lần đầu chạy)")
+    cts_runner_parser.add_argument("--retry_type",required=False, choices=[retry_type.value for retry_type in CTSRetryType], default = os.getenv("CTS_RETRY_TYPE", CTSRetryType.DEFAULT.value), help = "Kiểu retry, chọn giữa DEFAULT, NOT_EXECUTED hay FAILED")
+    cts_runner_parser.add_argument("--need_avd_alive",required=False, default = "True", help = "True nếu muốn enable chế độ keep-avd-alive")
+    cts_runner_parser.set_defaults(func=handle_cts_runner)
 
     # Parse và gọi hàm tương ứng
     args = parser.parse_args()
