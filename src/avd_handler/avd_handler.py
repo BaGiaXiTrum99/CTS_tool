@@ -18,11 +18,14 @@ class AVDHandler:
         self.is_headless = is_headless
 
     def __start_avd(self):
-        logger.info(f"[Watchdog] Starting AVD '{self.name}'...")
-        if self.is_headless == True:
+        logger.info(f"[Watchdog] Starting AVD '{self.name}' with headless option {self.is_headless}")
+        if self.is_headless == "True":
             Commands.execute_timeout_cmd(f'{self.emulator_path} -avd "{self.name}" -no-snapshot -no-audio -wipe-data -no-window',timeout=None) 
-        else:
+        elif self.is_headless == "False":
             Commands.execute_timeout_cmd(f'{self.emulator_path} -avd "{self.name}" -no-snapshot -wipe-data',timeout=None) 
+        else: 
+            logger.error(f"Not found the value {self.is_headless} of is_headless variable, please input 'False' or 'True'!!!")
+            raise ValueError
         time.sleep(5)
 
     def __close_avd(self):

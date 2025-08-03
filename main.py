@@ -101,7 +101,7 @@ def main():
     avd.add_argument("--name", required=False, default = 'Automotive_1408p_landscape_with_Google_Play_1', help="AVD name")
     avd.add_argument("--emulator_path", required=False, default = '/home/'+getpass.getuser()+'/Android/Sdk/emulator/emulator', help="Đường dẫn tới android emulator")
     avd.add_argument("--timeout", type=int, default = 2, help="Timeout (days) của feature này")
-    avd.add_argument("--is_headless", type=bool, default = False, help="True nếu chạy avd ở chế độ headless")
+    avd.add_argument("--is_headless", type=str, default = "False", help="True nếu chạy avd ở chế độ headless")
     avd.set_defaults(func=handle_avd)
 
     # Parse và gọi hàm tương ứng
