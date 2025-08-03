@@ -7,7 +7,7 @@ Công cụ đa chức năng này được thiết kế để tự động hóa c
 * **Tạo Subplans XML**: Tự động tạo các tệp XML subplan dựa trên danh sách module được cung cấp hoặc tự động thu thập các module có sẵn trên thiết bị đang kiểm tra (DUT). Các module có thể được chia thành nhiều tệp subplan để quản lý việc chạy thử dễ dàng hơn.
 * **Phân tích kết quả và tạo báo cáo Excel**: Phân tích tệp `test_result.xml` do CTS tạo ra và sinh ra một báo cáo Excel chi tiết. Báo cáo này bao gồm thông tin về các module đã chạy, số lượng test case Passed/Failed/Ignored, thời gian thực thi, và tổng hợp kết quả.
 * **Hỗ trợ đa định dạng thời gian**: Thời gian thực thi trong báo cáo có thể được hiển thị dưới nhiều định dạng khác nhau (giây, mili giây, hoặc giờ/phút/giây).
-* **Hỗ trợ khởi động lại avd nếu bị crash khi chạy cts**: Tính năng này giúp đảm bảo AVD (Android Virtual Device) không bị tắt đột ngột, phục vụ cho các pipeline kiểm thử liên tục hoặc khi cần giữ emulator hoạt động sau khi CTS hoàn tất.
+* **Hỗ trợ khởi động lại avd nếu bị crash khi chạy cts**: Tính năng này giúp đảm bảo AVD (Android Virtual Device) không bị tắt đột ngột, phục vụ cho các pipeline kiểm thử liên tục. AVD sẽ được tự động wipe data và khởi động lại ở lần check đầu tiên để đảm bảo môi trường được refresh.
 * **Log chi tiết**: Ghi lại các hoạt động và lỗi trong quá trình thực thi để dễ dàng gỡ lỗi và theo dõi.
 
 ## Cài đặt

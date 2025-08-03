@@ -29,7 +29,7 @@ class AVDHandler:
         time.sleep(5)
 
     def __close_avd(self):
-        logger.info(f"[Watchdog] Closing AVD '{self.name}'...")
+        logger.info(f"[Watchdog] Closing AVD '{self.name}' if existed")
         avd_pid = self.__check_avd_PID()
         if avd_pid != "":
             logger.info(f"[Watchdog] Found AVD with PID {avd_pid} and killing it")
@@ -71,6 +71,7 @@ class AVDHandler:
 
     def keep_avd_alive(self):
         logger.info(f"[Watchdog] Monitoring AVD '{self.name}' for {self.max_runtime.days} day(s)...")
+        self.__close_avd()
         while True:
             if datetime.now() - self.start_time > self.max_runtime:
                 logger.info("[Watchdog] Reached time limit. Exiting.")
