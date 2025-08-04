@@ -34,7 +34,7 @@ Công cụ đa chức năng này được thiết kế để tự động hóa c
     Ví dụ:
     ```python
     # Trong src/create_subplans_xml/create_subplans_xml.py
-    cmd: str | list = "/home/ubuntu/Documents/Cienet/GAS_Cert/CTS/android-cts-14_r8-linux_x86-x86/android-cts/tools/cts-tradefed list modules"
+    cmd: str | list = "/home/ubuntu/Documents/GAS_Cert/CTS/android-cts-14_r8-linux_x86-x86/android-cts/tools/cts-tradefed list modules"
     ```
     Thay đổi đường dẫn trên cho phù hợp với môi trường của bạn.
 

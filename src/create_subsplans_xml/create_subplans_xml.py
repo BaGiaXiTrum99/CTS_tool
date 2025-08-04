@@ -43,7 +43,7 @@ class SubplanGenerator:
             self.__write_module_to_file(module_chunk,separate_filename)
 
     def __get_module_list_exist_in_DUT(self) -> list[str]:
-        cmd: str | list = "/home/vmo/Documents/CIenet/CTS/android-cts-14_r7-linux_x86-x86/android-cts/tools/cts-tradefed list modules"
+        cmd: str | list = "/home/vmo/Documents/CTS/android-cts-14_r7-linux_x86-x86/android-cts/tools/cts-tradefed list modules"
         stdout, _ = Commands.execute_short_cmd(cmd)
 
         # Bắt các dòng bắt đầu bằng x86_64 hoặc x86 và không có [secondary_user]

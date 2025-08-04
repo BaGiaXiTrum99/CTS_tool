@@ -63,8 +63,8 @@ def handle_avd(args):
 
 def handle_cts_runner(args):
     logger.info(f"Running Feature Run CTS continuously with args: {args}")
-    cts_runner = CTSHandler(args.android_cts_path,args.cmd,args.retry_time,args.retry_type,args.need_avd_alive)
-    cts_runner.run()
+    cts_runner = CTSHandler(args.android_cts_path,args.cmd,args.retry_time,args.retry_type)
+    cts_runner.run_cts()
 
 def main():
     load_dotenv()
@@ -113,10 +113,9 @@ def main():
     # --- Feature 4: Run CTS Continuously ---
     cts_runner_parser = subparsers.add_parser("cts-runner", help="Tự động chạy CTS command và retry theo option")
     cts_runner_parser.add_argument("--android_cts_path",required=False, default = '/home/'+getpass.getuser()+'/Documents/CTS/'+os.getenv("CTS_VERSION_NAME","android-cts-14_r7-linux_x86-x86")+'/android-cts', help = 'Đường dẫn tới thư mục andoird-cts')
-    cts_runner_parser.add_argument("--cmd", required=False, default = os.getenv("CTS_COMMAND", "run cts -m CtsTextTestCases"), help="Command chạy CTS trong CTS-Tradefed")
+    cts_runner_parser.add_argument("--cmd", required=False, default = os.getenv("CTS_COMMAND", "run cts -m CtsPerfettoTestCases -t HeapprofdCtsTest#ReleaseAppRuntime"), help="Command chạy CTS trong CTS-Tradefed")
     cts_runner_parser.add_argument("--retry_time",required=False, type = int, default = os.getenv("CTS_RETRY_TIME", 5), help = "Số lần retry ( không bao gồm lần đầu chạy)")
     cts_runner_parser.add_argument("--retry_type",required=False, choices=[retry_type.value for retry_type in CTSRetryType], default = os.getenv("CTS_RETRY_TYPE", CTSRetryType.DEFAULT.value), help = "Kiểu retry, chọn giữa DEFAULT, NOT_EXECUTED hay FAILED")
-    cts_runner_parser.add_argument("--need_avd_alive",required=False, default = "True", help = "True nếu muốn enable chế độ keep-avd-alive")
     cts_runner_parser.set_defaults(func=handle_cts_runner)
 
     # Parse và gọi hàm tương ứng

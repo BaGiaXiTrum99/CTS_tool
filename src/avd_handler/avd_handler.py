@@ -30,8 +30,8 @@ class AVDHandler:
 
     def __close_avd(self):
         logger.info(f"[Watchdog] Closing AVD '{self.name}' if existed")
-        avd_pid = self.__check_avd_PID()
-        if avd_pid != "":
+        avd_pid = ProcessHandler.finding_process(AVD_PROCESS_NAME)
+        if avd_pid is not None:
             logger.info(f"[Watchdog] Found AVD with PID {avd_pid} and killing it")
             cmd = f'kill {avd_pid}'
             Commands.execute_short_cmd(cmd)
@@ -77,7 +77,6 @@ class AVDHandler:
                 logger.info("[Watchdog] AVD is not running. Restarting...")
                 self.__start_avd()
             else:
-                logger.info("[Watchdog] AVD is running.")
-                logger.debug("Sleeping 10 seconds...")
-                time.sleep(10)
+                logger.debug("Sleeping 15 seconds...")
+                time.sleep(15)
         logger.info("========= Finish running =========")
