@@ -3,10 +3,10 @@ import re
 import math
 import logging
 import xml.etree.cElementTree as ET
-
 from xml.etree.ElementTree import Element
 from datetime import datetime
 from openpyxl import Workbook
+
 from utils.constants import *
 from utils.time_caculation import *
 from utils.ExcelHandler import *
@@ -16,7 +16,7 @@ logger = logging.getLogger("cts_logger." + __name__)
 
 class ResultXMLParser:
     def __init__(self, path: str, time_unit : str) -> None:
-        logger.info("Generate Report Feature")
+        logger.info("Generate Report CTS Feature")
         self.result_path = f"{path}/test_result.xml"
         self.time_unit = time_unit
         self.__root = self.__read_result_file()
@@ -42,8 +42,6 @@ class ResultXMLParser:
             totals_row[ReportColumn.EXECUTION_TIME.value] = sum_durations(totals_row[ReportColumn.EXECUTION_TIME.value],
                                                                     module_infor[ReportColumn.EXECUTION_TIME.value])
         else:
-            print(totals_row[ReportColumn.EXECUTION_TIME.value])
-            print(re.findall(r'\d+', module_infor[ReportColumn.EXECUTION_TIME.value]))
             totals_row[ReportColumn.EXECUTION_TIME.value] += sum(
                 int(x) for x in re.findall(r'\d+', module_infor[ReportColumn.EXECUTION_TIME.value])
             )                    

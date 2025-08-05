@@ -1,4 +1,5 @@
 from openpyxl.worksheet.worksheet import Worksheet
+from utils.constants import ReportColumn
 
 class ExcelHandler:
     @staticmethod
@@ -18,3 +19,11 @@ class ExcelHandler:
         ws.append(["[Build Information]"])
         for k, v in build_attribs.items():
             ws.append([k, v])
+
+    @staticmethod
+    def create_header_row(ws: Worksheet):
+        ws.column_dimensions['B'].width = 30
+        # Ghi header
+        headers = [col.value for col in ReportColumn]
+        ws.append(headers)
+        return ws

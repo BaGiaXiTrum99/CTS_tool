@@ -1,6 +1,8 @@
 import logging
 import os
+import glob
 from colorama import init, Fore, Style
+from logging.handlers import RotatingFileHandler
 init(autoreset=True)
 
 class ColoredFormatter(logging.Formatter):
@@ -53,7 +55,18 @@ def configure_logger(level_str: str, log_file: str = "logs/cts.log"):
     log_dir = os.path.dirname(log_file)
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
-    file_handler = logging.FileHandler(log_file)
+
+    # Xóa cts.log và tất cả file backup như cts.log.1, cts.log.2,...
+    log_pattern = os.path.join(log_dir, "cts.log*")
+    for f in glob.glob(log_pattern):
+        try:
+            os.remove(f)
+        except Exception as e:
+            print(f"Warning: Could not delete log file {f}: {e}")
+
+    file_handler = RotatingFileHandler(
+        log_file, maxBytes=20 * 1024 * 1024, backupCount=5, encoding='utf-8'
+    )
     file_handler.setFormatter(formatter)
     app_logger.addHandler(file_handler)
 
