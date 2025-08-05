@@ -15,10 +15,9 @@ from src.gen_report_excel.SubplansParser import SubplansParser
 logger = logging.getLogger("cts_logger." + __name__)
 
 class ResultXMLParser:
-    def __init__(self, path: str, time_unit : str, abi: str) -> None:
+    def __init__(self, path: str, time_unit : str) -> None:
         logger.info("Generate Report Feature")
         self.result_path = f"{path}/test_result.xml"
-        self.abi = abi    
         self.time_unit = time_unit
         self.__root = self.__read_result_file()
     

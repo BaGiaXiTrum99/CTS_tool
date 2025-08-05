@@ -10,12 +10,13 @@ AVD_PROCESS_NAME = "qemu-system-x86_64"
 logger = logging.getLogger("cts_logger." + __name__)
 
 class AVDHandler:
-    def __init__(self, name : str, emulator_path : str, timeout : int, is_headless : bool):
+    def __init__(self, name : str, emulator_path : str, timeout : int, is_headless : str, restart_avd : str):
         self.name = name
         self.emulator_path = emulator_path
         self.max_runtime = timedelta(timeout)
         self.start_time = datetime.now()
         self.is_headless = is_headless.upper()
+        self.restart_avd = restart_avd.upper()
 
     def __start_avd(self):
         logger.info(f"[Watchdog] Starting AVD '{self.name}' with headless option {self.is_headless}")
@@ -60,8 +61,11 @@ class AVDHandler:
     def keep_avd_alive(self):
         logger.info(f"[Watchdog] Monitoring AVD '{self.name}' for {self.max_runtime.days} day(s)...")
         if self.is_cts_running():
-            logger.info("[Watchdog] CTS is started. We start new avd for the fresh environment.")
-            self.__close_avd()
+            if self.restart_avd == "TRUE":
+                logger.info("[Watchdog] CTS is started. We start new avd for the fresh environment.")
+                self.__close_avd()
+            else:
+                logger.info("[Watchdog] restart_avd is set to False for debugging, not closing AVD")
         else:
             raise RuntimeError("[Watchdog] CTS is not started, please start before running.")
         while True:

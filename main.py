@@ -46,7 +46,7 @@ def handle_gen_subplan(args):
 
 def handle_gen_report(args):
     logger.info(f"Running Feature Generate Report CTS with args: {args}")
-    parser = ResultXMLParser(args.path,args.time_unit,args.abi)
+    parser = ResultXMLParser(args.path,args.time_unit)
     parser.parser_all_modules(
         subplans_path=args.subplans_path
     )
@@ -58,12 +58,12 @@ def handle_gen_report_CTS_V(args):
 
 def handle_avd(args):
     logger.info(f"Running Feature Keep AVD alive with args: {args}")
-    avd = AVDHandler(args.name,args.emulator_path,args.timeout,args.is_headless)
+    avd = AVDHandler(args.name,args.emulator_path,args.timeout,args.is_headless,args.restart_avd)
     avd.keep_avd_alive()
 
 def handle_cts_runner(args):
     logger.info(f"Running Feature Run CTS continuously with args: {args}")
-    cts_runner = CTSHandler(args.android_cts_path,args.cmd,args.retry_time,args.retry_type)
+    cts_runner = CTSHandler(args.android_cts_path,args.cmd,args.retry_time,args.retry_type,args.restart_avd)
     cts_runner.run_cts()
 
 def main():
@@ -90,14 +90,13 @@ def main():
 
     # --- Feature 2: gen-report ---
     report_parser = subparsers.add_parser("gen-report", help="Phân tích kết quả và sinh báo cáo Excel CTS")
-    report_parser.add_argument("--path", required=False, default = './data/2025.07.10_08.36.27.870_3983', help="Thư mục chứa test_result.xml")
+    report_parser.add_argument("--path", required=False, default = './data/results_CTS', help="thư mục chứa các report folder của CTS")
     report_parser.add_argument("--time_unit", choices=["ms", "s", "h/m/s"], default="h/m/s", help="Đơn vị thời gian")
-    report_parser.add_argument("--abi", default="x86_64", help="Processor máy của bạn")
-    report_parser.add_argument("--subplans_path", default=None, help="Nơi lưu báo cáo Excel")
+    report_parser.add_argument("--subplans_path", default=None, help="Nơi lưu báo cáo subplans, dùng để check các test module không chạy được trên DUT nhưng lại xuất hiện trên subplan")
     report_parser.set_defaults(func=handle_gen_report)
 
     # --- Feature 2: gen-report CTS-V ---
-    report_ctsV_parser = subparsers.add_parser("gen-report-CTS-V", help="Phân tích kết quả và sinh báo cáo Excel CTS")
+    report_ctsV_parser = subparsers.add_parser("gen-report-CTS-V", help="Phân tích kết quả và sinh báo cáo Excel CTS Verifier")
     report_ctsV_parser.add_argument("--path", required=False, default = './data/CTS_V', help="Thư mục chứa test_result.xml")
     report_ctsV_parser.add_argument("--time_unit", choices=[timeunit.value for timeunit in TimeUnit], default=TimeUnit.HMS.value, help="Đơn vị thời gian")
     report_ctsV_parser.set_defaults(func=handle_gen_report_CTS_V)
@@ -108,6 +107,7 @@ def main():
     avd_parser.add_argument("--emulator_path", required=False, default = '/home/'+getpass.getuser()+'/Android/Sdk/emulator/emulator', help="Đường dẫn tới android emulator")
     avd_parser.add_argument("--timeout", type=int, default = 2, help="Timeout (days) của feature này")
     avd_parser.add_argument("--is_headless", type=str, default = "False", help="True nếu chạy avd ở chế độ headless")
+    avd_parser.add_argument("--restart_avd",required=False, type=str, default = "True", default = os.getenv("NEED_RESTART_AVD", "True"), help = "True nếu muốn restart lại avd để refresh môi trường, False nếu bạn muốn giữ lại để debug")
     avd_parser.set_defaults(func=handle_avd)
 
     # --- Feature 4: Run CTS Continuously ---
@@ -116,7 +116,7 @@ def main():
     cts_runner_parser.add_argument("--cmd", required=False, default = os.getenv("CTS_COMMAND", "run cts -m CtsPerfettoTestCases -t HeapprofdCtsTest#ReleaseAppRuntime"), help="Command chạy CTS trong CTS-Tradefed")
     cts_runner_parser.add_argument("--retry_time",required=False, type = int, default = os.getenv("CTS_RETRY_TIME", 5), help = "Số lần retry ( không bao gồm lần đầu chạy)")
     cts_runner_parser.add_argument("--retry_type",required=False, choices=[retry_type.value for retry_type in CTSRetryType], default = os.getenv("CTS_RETRY_TYPE", CTSRetryType.DEFAULT.value), help = "Kiểu retry, chọn giữa DEFAULT, NOT_EXECUTED hay FAILED")
-    cts_runner_parser.set_defaults(func=handle_cts_runner)
+    cts_runner_parser.add_argument("--restart_avd",required=False, type=str, default = "True", default = os.getenv("NEED_RESTART_AVD", "True"), help = "True nếu muốn restart lại avd để refresh môi trường, False nếu bạn muốn giữ lại để debug")
 
     # Parse và gọi hàm tương ứng
     args = parser.parse_args()

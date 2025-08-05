@@ -13,14 +13,16 @@ logger = logging.getLogger("cts_logger." + __name__)
 
 WAIT_PROCESS_TIMEOUT = 60000
 END_STRING = "=================== End ===================="
+
 class CTSHandler:
-    def __init__(self,android_cts_path : str ,cmd : str ,retry_time : int ,retry_type : str):
+    def __init__(self,android_cts_path : str ,cmd : str ,retry_time : int ,retry_type : str , restart_avd : str):
         self.android_cts_path = android_cts_path
         self.cts_tradefed = self.android_cts_path + '/tools/cts-tradefed'
         self.cmd = cmd
         self.retry_time = retry_time
         self.retry_type = retry_type
         self.cts_tf_proc = None
+        self.restart_avd = restart_avd
         self.command_done = threading.Event()
 
     def __open_tradefed_session(self):
@@ -123,15 +125,13 @@ class CTSHandler:
         output_thread.join()
         error_thread.join()
 
-    def check_list_results(self):
-        pass
-
     def monitoring_avd(self):
         self.avd = AVDHandler(
             name = "Automotive_1408p_landscape_with_Google_Play_1",
             emulator_path = '/home/'+getpass.getuser()+'/Android/Sdk/emulator/emulator',
-            timeout = 2,
-            is_headless = "False"
+            timeout = 3,
+            is_headless = "False",
+            restart_avd=self.restart_avd
         )
         self.avd.keep_avd_alive()
 
