@@ -1,7 +1,7 @@
 import re
 from typing import List
 import logging
-from utils.time_caculation import *
+from utils.time_caculation import TimeHandler
 
 logger = logging.getLogger("cts_logger." + __name__)
 
@@ -72,7 +72,7 @@ class SummaryParser:
         module_execution_time_info = []
         for module, consumed_time in consumed.items():
             if module in preparation:
-                total_time = sum_durations(consumed_time, preparation[module])
+                total_time = TimeHandler.sum_durations(consumed_time, preparation[module])
                 module_execution_time_info.append([module, total_time])
         
         logger.info(f"Final Execution Time per module: {module_execution_time_info}")

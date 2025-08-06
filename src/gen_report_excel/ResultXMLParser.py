@@ -15,10 +15,11 @@ from src.gen_report_excel.SubplansParser import SubplansParser
 logger = logging.getLogger("cts_logger." + __name__)
 
 class ResultXMLParser:
-    def __init__(self, path: str, time_unit : str) -> None:
+    def __init__(self, path: str, time_unit : str, output_dir : str) -> None:
         logger.info("Generate Report CTS Feature")
         self.result_path = f"{path}/test_result.xml"
         self.time_unit = time_unit
+        self.output_dir = output_dir
         self.__root = self.__read_result_file()
     
     def __read_result_file(self):
@@ -39,7 +40,7 @@ class ResultXMLParser:
                     ReportColumn.TOTAL.value):
             totals_row[key] += module_infor[key]
         if self.time_unit == TimeUnit.HMS.value:
-            totals_row[ReportColumn.EXECUTION_TIME.value] = sum_durations(totals_row[ReportColumn.EXECUTION_TIME.value],
+            totals_row[ReportColumn.EXECUTION_TIME.value] = TimeHandler.sum_durations(totals_row[ReportColumn.EXECUTION_TIME.value],
                                                                     module_infor[ReportColumn.EXECUTION_TIME.value])
         else:
             totals_row[ReportColumn.EXECUTION_TIME.value] += sum(
@@ -112,7 +113,7 @@ class ResultXMLParser:
         total_row = ["Total", ""] + [totals[k] for k in headers[2:]]
         ws.append(total_row)
 
-        output_file = f"./result/myresult_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        output_file = f"{self.output_dir}/myresult_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         wb.save(output_file)
         logger.info(f"Saved result to {output_file}")
@@ -121,20 +122,8 @@ class ResultXMLParser:
         name = module.get("name")
         logger.info(f"Parsing module {name}")
 
-        execution_time = module.get("runtime")
-        assert execution_time is not None, "Can not get runtime of module"
-        execution_time = int(execution_time) 
+        execution_time = TimeHandler.get_execution_time_from_module(module , self.time_unit)
 
-        if self.time_unit == TimeUnit.HMS.value:
-            execution_time = format_duration(math.ceil(execution_time/1000)) 
-            logger.info(f"Execution Time: {execution_time}")
-        elif self.time_unit == TimeUnit.S.value:
-            execution_time = str(math.ceil(execution_time/1000)) + "s"
-            logger.info(f"Execution Time: {execution_time} {self.time_unit}")
-        elif self.time_unit == TimeUnit.MS.value:
-            execution_time = str(execution_time) + "ms"
-            logger.info(f"Execution Time: {execution_time} {self.time_unit}")
-        
         assert module.get("done") is not None, "Can not get result of module"
         done = True if module.get("done") == "true" else False
         logger.info(f"Done: {done}")

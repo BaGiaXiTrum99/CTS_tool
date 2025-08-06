@@ -1,4 +1,5 @@
 import os
+import re
 import math
 import logging
 import xml.etree.cElementTree as ET
@@ -7,16 +8,17 @@ from xml.etree.ElementTree import Element
 from datetime import datetime
 from openpyxl import Workbook
 from utils.constants import *
-from utils.time_caculation import *
+from utils.time_caculation import TimeHandler
 from utils.ExcelHandler import *
 
 logger = logging.getLogger("cts_logger." + __name__)
 
 class ResultXMLParser_CTS_V:
-    def __init__(self, path: str, time_unit : str) -> None:
+    def __init__(self, path: str, time_unit : str, output_dir : str) -> None:
         logger.info("Generate Report CTS Verifier Feature")
         self.result_path = f"{path}/test_result.xml" 
         self.time_unit = time_unit
+        self.output_dir = output_dir
         self.__root = self.__read_result_file()
     
     def __read_result_file(self):
@@ -60,7 +62,7 @@ class ResultXMLParser_CTS_V:
             idx += 1
             self.__write_module_row(ws, idx, test_infor)
             if self.time_unit == TimeUnit.HMS.value:
-                totals[ReportColumn.EXECUTION_TIME.value] = sum_durations(totals[ReportColumn.EXECUTION_TIME.value],
+                totals[ReportColumn.EXECUTION_TIME.value] = TimeHandler.sum_durations(totals[ReportColumn.EXECUTION_TIME.value],
                                                                             test_infor[ReportColumn.EXECUTION_TIME.value])
             else:
                 totals[ReportColumn.EXECUTION_TIME.value] += sum(
@@ -74,7 +76,7 @@ class ResultXMLParser_CTS_V:
         total_row = ["Total", "", "", totals[ReportColumn.EXECUTION_TIME.value]]
         ws.append(total_row)
 
-        output_file = f"./result/myresult_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        output_file = f"{self.output_dir}/myresult_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         wb.save(output_file)
         logger.info(f"Saved result to {output_file}")
@@ -97,7 +99,7 @@ class ResultXMLParser_CTS_V:
         if self.time_unit == TimeUnit.S.value:
             execution_time = str(math.ceil(execution_time/1000))
         elif self.time_unit == TimeUnit.HMS.value:
-            execution_time = format_duration(math.ceil(execution_time/1000))
+            execution_time = TimeHandler.format_duration(math.ceil(execution_time/1000))
 
         return {
             ReportColumnCTS_V.TEST.value     : name,

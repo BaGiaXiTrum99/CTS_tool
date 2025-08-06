@@ -1,22 +1,24 @@
 import os
-import math
+import re
 import logging
 import xml.etree.cElementTree as ET
 from xml.etree.ElementTree import Element,ElementTree
 from openpyxl import Workbook
+from openpyxl.worksheet.worksheet import Worksheet
 from datetime import datetime
 
-from utils.time_caculation import *
+from utils.time_caculation import TimeHandler
 from utils.constants import *
-from utils.ExcelHandler import *
+from utils.ExcelHandler import ExcelHandler
 
 logger = logging.getLogger("cts_logger." + __name__)
 
 class MultiResultXMLParser:
-    def __init__(self, path: str, time_unit : str) -> None:
+    def __init__(self, path: str, time_unit : str, output_dir: str ) -> None:
         logger.info("Generate Multi Report CTS Feature")
         self.result_path = os.path.abspath(path)
         self.time_unit = time_unit
+        self.output_dir = output_dir
 
     def __search_all_single_result_folder(self):
         report_files = []
@@ -32,7 +34,12 @@ class MultiResultXMLParser:
 
     def __get_root_of_result_file(self,report_file):
         logger.info(f"Reading XML result file {report_file}")
-        tree = ET.parse(report_file)   
+        try:
+            tree = ET.parse(report_file)
+        except ET.ParseError as e:
+            msg = f"Failed to parse XML file {report_file}: {e}"
+            logger.error(msg)
+            raise RuntimeError(msg)
         return tree.getroot()     
 
     def __get_list_modules_name(self, root : ElementTree):
@@ -44,19 +51,7 @@ class MultiResultXMLParser:
         name = module.get("name")
         logger.info(f"Parsing module {name}")
 
-        execution_time = module.get("runtime")
-        assert execution_time is not None, "Can not get runtime of module"
-        execution_time = int(execution_time) 
-
-        if self.time_unit == TimeUnit.HMS.value:
-            execution_time = format_duration(math.ceil(execution_time/1000)) 
-            logger.debug(f"Execution Time: {execution_time}")
-        elif self.time_unit == TimeUnit.S.value:
-            execution_time = str(math.ceil(execution_time/1000)) + "s"
-            logger.debug(f"Execution Time: {execution_time} {self.time_unit}")
-        elif self.time_unit == TimeUnit.MS.value:
-            execution_time = str(execution_time) + "ms"
-            logger.debug(f"Execution Time: {execution_time} {self.time_unit}")
+        execution_time = TimeHandler.get_execution_time_from_module(module,self.time_unit)
         
         assert module.get("done") is not None, "Can not get result of module"
         done = True if module.get("done") == "true" else False
@@ -92,8 +87,10 @@ class MultiResultXMLParser:
         logger.info(f"Found {total_tests_str} tests")
         total_testcases = int(total_tests_str) if total_tests_str else 0
 
-        assert total_testcases == pass_count + fail_count + assumption_failure + ignored, \
-            f"Test count mismatch: {total_testcases} vs {pass_count} + {fail_count} + {assumption_failure} + {ignored}"
+        if total_testcases != pass_count + fail_count + assumption_failure + ignored:
+            msg = f"Mismatch test count in {name}: total={total_testcases}, counted={pass_count + fail_count + assumption_failure + ignored}"
+            logger.error(msg)
+            raise ValueError(msg)
         
         return {
             ReportColumn.MODULES.value  : name,
@@ -109,22 +106,7 @@ class MultiResultXMLParser:
     def __parser_module_time_execution(self,module : Element ) -> str:
         name = module.get("name")
         logger.info(f"Parsing module {name}")
-
-        execution_time = module.get("runtime")
-        assert execution_time is not None, "Can not get runtime of module"
-        execution_time = int(execution_time) 
-
-        if self.time_unit == TimeUnit.HMS.value:
-            execution_time = format_duration(math.ceil(execution_time/1000)) 
-            logger.debug(f"Execution Time: {execution_time}")
-        elif self.time_unit == TimeUnit.S.value:
-            execution_time = str(math.ceil(execution_time/1000)) + "s"
-            logger.debug(f"Execution Time: {execution_time} {self.time_unit}")
-        elif self.time_unit == TimeUnit.MS.value:
-            execution_time = str(execution_time) + "ms"
-            logger.debug(f"Execution Time: {execution_time} {self.time_unit}")
-        
-        return execution_time
+        return TimeHandler.get_execution_time_from_module(module,self.time_unit)
 
     def __write_module_row(self, ws: Worksheet, index: int, module_data: dict):
         row = [index] + [module_data[col.value] for col in list(ReportColumn)[1:]]
@@ -149,7 +131,7 @@ class MultiResultXMLParser:
         }
 
         report_files = self.__search_all_single_result_folder()
-        # Loai bo phan tu cuoi cung, vi ta chi parse so lieu cu the tu phan tu cuoi
+        # Loại bỏ các phần tử phía trước, chỉ parse dữ liệu cụ thể từ phần tử cuối
         last_report_file = report_files.pop(-1)
 
         # Xu li file cuoi truoc
@@ -169,9 +151,12 @@ class MultiResultXMLParser:
                 logger.info(f"Parsing XML result file {report_file}")
                 root = self.__get_root_of_result_file(report_file)
                 module = root.find(f'.//Module[@name="{module_name}"]')
+                if module is None:
+                    logger.error(f"Module {module_name} not found in {report_file}")
+                    continue
                 module_execution_time = self.__parser_module_time_execution(module)
                 if old_module_execution_time != module_execution_time:
-                    module_infor[ReportColumn.EXECUTION_TIME.value] = sum_durations(module_infor[ReportColumn.EXECUTION_TIME.value],module_execution_time)
+                    module_infor[ReportColumn.EXECUTION_TIME.value] = TimeHandler.sum_durations(module_infor[ReportColumn.EXECUTION_TIME.value],module_execution_time)
                     old_module_execution_time = module_execution_time
                 else:
                     continue
@@ -185,7 +170,7 @@ class MultiResultXMLParser:
                         ReportColumn.TOTAL.value):
                 totals[key] += module_infor[key]
             if self.time_unit == TimeUnit.HMS.value:
-                totals[ReportColumn.EXECUTION_TIME.value] = sum_durations(totals[ReportColumn.EXECUTION_TIME.value],
+                totals[ReportColumn.EXECUTION_TIME.value] = TimeHandler.sum_durations(totals[ReportColumn.EXECUTION_TIME.value],
                                                                         module_infor[ReportColumn.EXECUTION_TIME.value])
             else:
                 totals[ReportColumn.EXECUTION_TIME.value] += sum(
@@ -201,7 +186,7 @@ class MultiResultXMLParser:
         total_row = ["Total", ""] + [totals[k] for k in [col.value for col in ReportColumn][2:]]
         ws.append(total_row)
 
-        output_file = f"./result/myresult_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        output_file = f"{self.output_dir}/myresult_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         wb.save(output_file)
         logger.info(f"Saved result to {output_file}")
