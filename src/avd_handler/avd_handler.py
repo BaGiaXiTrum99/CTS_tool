@@ -1,5 +1,6 @@
 import logging
 import time
+import subprocess
 from datetime import datetime,timedelta
 
 from utils.running_commands import Commands
@@ -21,13 +22,42 @@ class AVDHandler:
         self.restart_avd = restart_avd
         self.sleep_interval = sleep_interval
 
+    def __wait_for_avd_boot(self, timeout=120):
+        logger.info(f"{WATCHDOG_PREFIX} Waiting for AVD Boot Complete")
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                # Check if any device is online first
+                devices_output = subprocess.check_output("adb devices", shell=True, text=True)
+                if "offline" in devices_output:
+                    logger.debug(f"{WATCHDOG_PREFIX} Device is offline, waiting...")
+                    time.sleep(2)
+                    continue
+                elif "device" not in devices_output:
+                    logger.debug(f"{WATCHDOG_PREFIX} No device found yet...")
+                    time.sleep(2)
+                    continue
+
+                # Now check if boot completed
+                output = subprocess.check_output("adb shell getprop sys.boot_completed", shell=True, timeout=5, text=True)
+                if output.strip() == "1":
+                    logger.info(f"{WATCHDOG_PREFIX} AVD Boot Completed in {time.time() - start:.2f} seconds")
+                    return
+            except subprocess.CalledProcessError as e:
+                logger.debug(f"{WATCHDOG_PREFIX} ADB shell failed: {e}")
+            except subprocess.TimeoutExpired:
+                logger.debug(f"{WATCHDOG_PREFIX} ADB shell timeout")
+            time.sleep(2)
+
+        logger.error(f"{WATCHDOG_PREFIX} AVD did not boot within {timeout} seconds")
+
     def start_avd(self):
         logger.info(f"{WATCHDOG_PREFIX} Starting AVD '{self.name}' with headless option {self.is_headless}")
         if self.is_headless:
             Commands.execute_timeout_cmd(f'{self.emulator_path} -avd "{self.name}" -no-snapshot -no-audio -wipe-data -no-window',timeout=None) 
         else:
             Commands.execute_timeout_cmd(f'{self.emulator_path} -avd "{self.name}" -no-snapshot -wipe-data',timeout=None) 
-        time.sleep(10)
+        self.__wait_for_avd_boot(120)
 
     def close_avd(self):
         logger.info(f"{WATCHDOG_PREFIX} Closing AVD '{self.name}' if existed")

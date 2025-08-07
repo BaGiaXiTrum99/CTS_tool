@@ -40,8 +40,8 @@ class Commands:
         )
         if timeout is None:
             try:
-                logger.info("Not setting timeout for running, we wait 30 seconds for some outputs")
-                process.wait(30)
+                logger.info("Not setting timeout for running, we wait 10 seconds for some outputs")
+                process.wait(10)
             except subprocess.TimeoutExpired as e:
                 logger.info("Timeout for output reached, leaving process without closing it")
         else:

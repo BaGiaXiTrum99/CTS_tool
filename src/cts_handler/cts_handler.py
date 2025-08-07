@@ -88,6 +88,7 @@ class CTSHandler:
         if self.retry_time <= 0:
             logger.info(f"{CTS_RUNNER_PREFIX} No trigger rerun!")
         else:
+            time.sleep(30)
             if "retry" in self.cmd:
                 for retry_time_count in range(1,self.retry_time+1):
                     self.__retry_time_count(retry_time_count)
