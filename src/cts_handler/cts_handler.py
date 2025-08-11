@@ -16,13 +16,14 @@ END_STRING = "=================== End ===================="
 CTS_RUNNER_PREFIX = "[CTS_RUNNER]" 
 
 class CTSHandler:
-    def __init__(self,android_cts_path : str ,cmd : str ,retry_time : int ,retry_type : str , restart_avd : str):
+    def __init__(self,android_cts_path : str ,cmd : str ,retry_time : int ,retry_type : str , is_headless : bool, restart_avd : bool):
         self.android_cts_path = android_cts_path
         self.cts_tradefed = self.android_cts_path + '/tools/cts-tradefed'
         self.cmd = cmd
         self.retry_time = retry_time
         self.retry_type = retry_type
         self.cts_tf_proc = None
+        self.is_headless = is_headless
         self.restart_avd = restart_avd
         self.command_done = threading.Event()
 
@@ -128,8 +129,8 @@ class CTSHandler:
             name = "Automotive_1408p_landscape_with_Google_Play_1",
             emulator_path = '/home/'+getpass.getuser()+'/Android/Sdk/emulator/emulator',
             timeout = 3,
-            is_headless = False,
-            restart_avd=self.restart_avd
+            is_headless = self.is_headless,
+            restart_avd = self.restart_avd
         )
         self.avd.keep_avd_alive()
 

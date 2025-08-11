@@ -53,10 +53,11 @@ class AVDHandler:
 
     def start_avd(self):
         logger.info(f"{WATCHDOG_PREFIX} Starting AVD '{self.name}' with headless option {self.is_headless}")
+        # Add option -wipe-data only for debug purpose
         if self.is_headless:
-            Commands.execute_timeout_cmd(f'{self.emulator_path} -avd "{self.name}" -no-snapshot -no-audio -wipe-data -no-window',timeout=None) 
+            Commands.execute_timeout_cmd(f'{self.emulator_path} -avd "{self.name}" -no-snapshot -no-audio -no-window',timeout=None) 
         else:
-            Commands.execute_timeout_cmd(f'{self.emulator_path} -avd "{self.name}" -no-snapshot -wipe-data',timeout=None) 
+            Commands.execute_timeout_cmd(f'{self.emulator_path} -avd "{self.name}" -no-snapshot',timeout=None) 
         self.__wait_for_avd_boot(120)
 
     def close_avd(self):
