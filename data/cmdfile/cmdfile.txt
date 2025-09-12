@@ -1,0 +1,76 @@
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.PhotoPickerTest#testMultiSelect_previewVideoMuteButtonOnSwipe[intent=android.provider.action.PICK_IMAGES] --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.PhotoPickerTest#testMultiSelect[intent=android.intent.action.GET_CONTENT] --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.PhotoPickerTest#testMultiSelect[intent=android.provider.action.PICK_IMAGES] --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.PhotoPickerTest#testPickerUriFileExtensions[intent=android.intent.action.GET_CONTENT] --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.PhotoPickerTest#testPickerUriFileExtensions[intent=android.provider.action.PICK_IMAGES] --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.PhotoPickerTest#testSingleSelect[intent=android.intent.action.GET_CONTENT] --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.PhotoPickerTest#testSingleSelect[intent=android.provider.action.PICK_IMAGES] --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.PhotoPickerTest#testSingleSelectWithPreview[intent=android.intent.action.GET_CONTENT] --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.PhotoPickerTest#testSingleSelectWithPreview[intent=android.provider.action.PICK_IMAGES] --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.PhotoPickerTest#testVideoPreviewAudioFocus[intent=android.intent.action.GET_CONTENT] --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.PhotoPickerTest#testVideoPreviewAudioFocus[intent=android.provider.action.PICK_IMAGES] --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.RemoteVideoPreviewTest#testVideoPreviewPermanentError --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.RemoteVideoPreviewTest#testVideoPreviewProgressIndicator --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPhotoPickerTest -t android.photopicker.cts.RemoteVideoPreviewTest#testVideoPreviewRetriableError --exclude-filter CtsPhotoPickerTest[run-on-work-profile]
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.MediaPermissionTest#testWhenA33AppRequestsAuralThenDialogAndGrant
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.MediaPermissionTest#testWhenA33AppRequestsVisualThenDialogAndGrant
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.MediaPermissionTest#testWhenAuralIsDeniedManuallyThenShouldDenyAllPermissions
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.MediaPermissionTest#testWhenAuralIsGrantedManuallyThenShouldGrantAllPermissions
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.MediaPermissionTest#testWhenRESIsDeniedFromGrantDialogThenShouldDenyAllPermissions
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.MediaPermissionTest#testWhenRESIsGrantedFromGrantDialogThenShouldGrantAllPermissions
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.MediaPermissionTest#testWhenVisualIsGrantedManuallyThenShouldGrantAllPermissions
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.MediaPermissionUpgradeTest#testAfterUpgradeToTiramisuThenNoGrantDialogShownForMediaPerms
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.NotificationPermissionTest#mergeAppPermissionRequestIntoNotificationAndVerifyResult
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.NotificationPermissionTest#mergeNotificationRequestIntoAppPermissionRequestAndVerifyResult
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.NotificationPermissionTest#notificationGrantedOnLegacyGrant
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.NotificationPermissionTest#notificationPromptShownForChannelCreateInSecondActivityIfTaskStartWasLauncher
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.NotificationPermissionTest#notificationPromptShownForSubsequentStartsIfTaskStartWasLauncher
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.NotificationPermissionTest#notificationPromptShowsForLegacyAppAfterCreatingNotificationChannels
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.NotificationPermissionTest#notificationPromptShowsForLegacyAppWithNotificationChannelsOnStart
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.NotificationPermissionTest#notificationPromptShowsIfActivityOptionSet
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionDecisionsTest#testAcceptPermissionDialogShowsDecisionWithGrantedAccess
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionDecisionsTest#testAppUninstallRemovesDecision
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionDecisionsTest#testClickOnDecisionAndChangeAccessUpdatesDecision
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionGroupTest#testPartiallyGrantedGroupExpansion
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionGroupTest#testRuntimeGroupGrantExpansion23
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionGroupTest#testRuntimeGroupGrantExpansion25
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionGroupTest#testRuntimeGroupGrantExpansion26
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionGroupTest#testRuntimeGroupGrantExpansion30
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionReviewTapjackingTest#testOverlaysAreHidden
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionReviewTest#testCancelReview
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionReviewTest#testDenyCalendarDuringReview
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionReviewTest#testDenyGrantCalendarDuringReview
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionReviewTest#testDenyGrantDenyCalendarDuringReview
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionReviewTest#testNotificationPermissionAddedToReview
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionReviewTest#testReviewPermissionWhenServiceIsBound
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionSplitTest#testPermissionNotSplit29
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionSplitTest#testPermissionNotSplit30
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionSplitTest#testPermissionNotSplitLatest
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionSplitTest#testPermissionSplit28
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTapjackingTest#testTapjackGrantDialog_fullOverlay
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTapjackingTest#testTapjackGrantDialog_partialOverlay
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest22#testCompatDefault
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest22#testNoRuntimePrompt
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest23#testCancelledPermissionRequest
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest23#testDenialWithPrejudice
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest23#testGrantPreviouslyRevokedWithPrejudiceShowsPrompt
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest23#testInteractiveGrant
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest23#testInvalidPermission
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest23#testNullAndRealPermission
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest23#testRequestGrantedPermission
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest23#testRequestNonExistentPermission
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest23#testRequestPermissionFromTwoGroups
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest23#testRuntimeGroupGrantSpecificity
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest29#testDenyBackgroundWithPrejudice
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest29#testGrantDialogToSettingsDowngrade
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest29#testGrantDialogToSettingsNoOp
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest29#testRequestBoth
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest29#testRequestBothButGrantInSequence
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest29#testRequestBothInSequence
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest29#testRequestOnlyBackgroundNotPossible
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest30#testCantRequestFgAndBgAtOnce
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest30#testRequestBothInSequence
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionTest30#testRequestFgLocationAndNoAccuracyOptions
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionUpgradeTest#testRevokePropagatedOnUpgradeNewToNewModel
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionUpgradeTest#testRevokePropagatedOnUpgradeOldToNewModel
+run cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionUpgradeTest#testUpgradeKeepsPermissions

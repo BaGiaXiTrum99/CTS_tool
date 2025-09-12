@@ -1,0 +1,391 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no' ?><?xml-stylesheet type="text/xsl" href="compatibility_result.xsl"?>
+<Result start="1752116720760" end="1752116720760" start_display="Thu Jul 10 03:05:20 GMT 2025" end_display="Thu Jul 10 03:05:20 GMT 2025" suite_name="CTS_VERIFIER" suite_version="14_r7" suite_plan="verifier" suite_build_number="0" report_version="5.0" command_line_args="" devices="" host_name="localhost" os_name="Linux" os_version="6.1.114-g862fad8d0ada-v8" os_arch="aarch64" java_vendor="The Android Project" java_version="0">
+  <Build build_abis_64="arm64-v8a" build_manufacturer="Cienet" build_abis_32="" build_product="aosp_cnt_car" build_brand="Cienet" build_board="unknown" build_serial="1000000018075bf8" build_version_security_patch="2024-09-05" build_fingerprint="Cienet/aosp_cnt_car/cnt:14/AP2A.240905.003/1.0.0.20250312+001:userdebug/test-keys" build_abis="arm64-v8a" build_version_sdk="34" build_device="cnt" build_abi="arm64-v8a" build_bootimage_fingerprint="unknown" build_id="AP2A.240905.003" build_model="Cienet IVI 4" build_abi2="" build_version_release="14" build_version_incremental="1.0.0.20250312+001" build_version_base_os="" build_type="userdebug" build_tags="test-keys" />
+  <Summary pass="32" failed="0" modules_done="1" modules_total="1" />
+  <Module name="CtsVerifier" abi="noabi" runtime="0" done="true" pass="32">
+    <TestCase name="manualTests">
+      <Test result="pass" name="com.android.cts.verifier.admin.DeviceAdminUninstallTestActivity">
+        <RunHistory>
+          <Run start="1752033013357" end="1752033642100" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.admin.PolicySerializationTestActivity">
+        <RunHistory>
+          <Run start="1752034019824" end="1752034025159" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.admin.tapjacking.DeviceAdminTapjackingTestActivity">
+        <RunHistory>
+          <Run start="1752032973993" end="1752033010556" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.audio.AudioAEC">
+        <RunHistory>
+          <Run start="1752029652256" end="1752029698160" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.audio.AudioDescriptorActivity">
+        <RunHistory>
+          <Run start="1752029834492" end="1752029863872" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.audio.AudioInColdStartLatencyActivity">
+        <RunHistory>
+          <Run start="1752029705067" end="1752029727573" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.audio.AudioOutColdStartLatencyActivity">
+        <RunHistory>
+          <Run start="1752029735674" end="1752029760858" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.car.CarLauncherTestActivity">
+        <RunHistory>
+          <Run start="1752030023613" end="1752030341488" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.car.PowerPolicyTestActivity">
+        <RunHistory>
+          <Run start="1752030344654" end="1752030683603" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.companion.CompanionDeviceTestActivity">
+        <RunHistory>
+          <Run start="1752034389670" end="1752034622183" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.displaycutout.DisplayCutoutTestActivity">
+        <RunHistory>
+          <Run start="1752034028970" end="1752034090638" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.input.UsiVersionActivity">
+        <RunHistory>
+          <Run start="1752035101753" end="1752035156696" isAutomated="false" />
+          <Run start="1752035190446" end="1752038513460" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.managedprovisioning.DeviceOwnerNegativeTestActivity">
+        <RunHistory subtest="ENTERPRISE_PRIVACY_ADD_ACCOUNT_NEGATIVE">
+          <Run start="1752045407141" end="1752045427447" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="DEVICE_OWNER_PROVISIONING_NEGATIVE">
+          <Run start="1752045120692" end="1752045151258" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY_QUICK_SETTINGS_NEGATIVE">
+          <Run start="1752045153808" end="1752045403263" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.managedprovisioning.DeviceOwnerPositiveTestActivity">
+        <RunHistory subtest="com.android.cts.verifier.managedprovisioning.WifiLockdownTestActivity:UNLOCKED_REMOVE">
+          <Run start="1752050867058" end="1752050956886" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_SECURITY_LOGGING">
+          <Run start="1752055832324" end="1752055864554" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="com.android.cts.verifier.managedprovisioning.WifiLockdownTestActivity:UNLOCKED_MODIFICATION">
+          <Run start="1752050599280" end="1752050680734" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="DISALLOW_USER_SWITCH">
+          <Run start="1752114540646" end="1752114711662" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="LOCK_TASK_UI:lock-task-ui-stop-lock-task">
+          <Run start="1752053455553" end="1752053475021" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_CAMERA_ACCESS">
+          <Run start="1752056452062" end="1752056477165" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow modify accounts">
+          <Run start="1752055157114" end="1752055186544" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow network reset">
+          <Run start="1752055190429" end="1752055248228" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow config date time">
+          <Run start="1752055347454" end="1752055363917" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow add user">
+          <Run start="1752053999627" end="1752054099720" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow controlling apps">
+          <Run start="1752054867066" end="1752054968237" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow config tethering">
+          <Run start="1752055045031" end="1752055069119" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="com.android.cts.verifier.managedprovisioning.PermissionLockdownTestActivity">
+          <Run start="1752053668753" end="1752053973570" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Set permitted input methods">
+          <Run start="1752055424708" end="1752055489940" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow config Wi-Fi">
+          <Run start="1752055070924" end="1752055090624" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_ALWAYS_ON_VPN">
+          <Run start="1752056586116" end="1752056619265" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_GLOBAL_HTTP_PROXY">
+          <Run start="1752056621831" end="1752056648531" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="com.android.cts.verifier.managedprovisioning.WifiLockdownTestActivity:LOCKED_CONNECT">
+          <Run start="1752050807861" end="1752050862495" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_NETWORK_LOGGING">
+          <Run start="1752055613953" end="1752055743003" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_LOCATION_ACCESS">
+          <Run start="1752056271629" end="1752056398735" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="NETWORK_LOGGING_UI">
+          <Run start="1752114769953" end="1752114982143" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_ENTERPRISE_INSTALLED_APPS">
+          <Run start="1752055869626" end="1752056266946" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="CHECK_DEVICE_OWNER">
+          <Run start="1752050439184" end="1752050441600" isAutomated="false" />
+          <Run start="1752050239617" end="1752050240403" isAutomated="false" />
+          <Run start="1752050237278" end="1752050237763" isAutomated="false" />
+          <Run start="1752050239001" end="1752050239455" isAutomated="false" />
+          <Run start="1752050233238" end="1752050235414" isAutomated="false" />
+          <Run start="1752043660714" end="1752043661259" isAutomated="false" />
+          <Run start="1752050515752" end="1752050516738" isAutomated="false" />
+          <Run start="1752050514101" end="1752050514833" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_DEFAULT_IME">
+          <Run start="1752056538510" end="1752056583790" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_BUG_REPORT">
+          <Run start="1752055745017" end="1752055830392" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="SET_USER_ICON">
+          <Run start="1752053482244" end="1752053663443" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_ADD_ACCOUNT">
+          <Run start="1752056755972" end="1752056817153" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="CHECK_PROFILE_OWNER">
+          <Run start="1752043663832" end="1752043664131" isAutomated="false" />
+          <Run start="1752054485549" end="1752054486128" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="com.android.cts.verifier.managedprovisioning.SsidRestrictionTestActivity">
+          <Run start="1752052452264" end="1752052758449" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_FAILED_PASSWORD_WIPE">
+          <Run start="1752056684932" end="1752056728818" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow debugging features">
+          <Run start="1752055093971" end="1752055118555" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="DISABLE_STATUS_BAR">
+          <Run start="1752053336125" end="1752053368185" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="REMOVE_DEVICE_OWNER">
+          <Run start="1752115296526" end="1752115400859" isAutomated="false" />
+          <Run start="1752044360630" end="1752044489359" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow config brightness">
+          <Run start="1752055387411" end="1752055397303" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_MICROPHONE_ACCESS">
+          <Run start="1752056403195" end="1752056450223" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="DEVICE_ADMIN_SETTINGS">
+          <Run start="1752044951396" end="1752045016191" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow factory reset">
+          <Run start="1752055120739" end="1752055155138" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Set auto (network) time required">
+          <Run start="1752055399521" end="1752055422205" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="DISALLOW_ADD_WIFI_CONFIG">
+          <Run start="1752051097623" end="1752051145925" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="com.android.cts.verifier.managedprovisioning.WifiLockdownTestActivity:DISALLOW_SHARING_ADMIN_CONFIGURED_WIFI">
+          <Run start="1752050973064" end="1752051036453" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow share location">
+          <Run start="1752055250350" end="1752055289452" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="DISALLOW_FACTORY_RESET">
+          <Run start="1752052761512" end="1752052995351" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow adjust volume">
+          <Run start="1752054862688" end="1752054864671" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="CHECK_USER_AFFILIATED">
+          <Run start="1752043668641" end="1752043669215" isAutomated="false" />
+          <Run start="1752043666115" end="1752043666544" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="WIFI_SECURITY_LEVEL_RESTRICTION">
+          <Run start="1752051552165" end="1752051559451" isAutomated="false" />
+          <Run start="1752052242902" end="1752052252007" isAutomated="false" />
+          <Run start="1752052254316" end="1752052443955" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_PAGE">
+          <Run start="1752055499985" end="1752055611689" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="SET_REQUIRED_PASSWORD_COMPLEXITY">
+          <Run start="1752114984062" end="1752115292732" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_CA_CERTS">
+          <Run start="1752056650454" end="1752056681999" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="DISALLOW_CONFIG_WIFI">
+          <Run start="1752051046639" end="1752051089575" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="DISALLOW_CONFIG_BT">
+          <Run start="1752052999921" end="1752053332312" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="DISALLOW_REMOVE_USER">
+          <Run start="1752114713449" end="1752114766515" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="USER_SWITCHER_MESSAGE">
+          <Run start="1752114266388" end="1752114450328" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="MANAGED_USER_UI">
+          <Run start="1752113983674" end="1752114262835" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_QUICK_SETTINGS">
+          <Run start="1752056731865" end="1752056752491" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow config credentials">
+          <Run start="1752054972168" end="1752055042674" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow config location">
+          <Run start="1752055365565" end="1752055384672" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="POLICY_TRANSPARENCY:DO_Disallow uninstall apps">
+          <Run start="1752055293152" end="1752055345324" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENABLE_LOGOUT">
+          <Run start="1752114455672" end="1752114534377" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="com.android.cts.verifier.managedprovisioning.WifiLockdownTestActivity:LOCKED_MODIFICATION">
+          <Run start="1752050694628" end="1752050750498" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="ENTERPRISE_PRIVACY:ENTERPRISE_PRIVACY_DEFAULT_APPS">
+          <Run start="1752056478584" end="1752056534617" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.managedprovisioning.DeviceOwnerRequestingBugreportTestActivity">
+        <RunHistory subtest="BUGREPORT_SHARING_ACCEPTED_AFTER_HAVING_BEEN_TAKEN">
+          <Run start="1752044140670" end="1752044356870" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="CHECK_PROFILE_OWNER">
+          <Run start="1752043663832" end="1752043664131" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="BUGREPORT_SHARING_DECLINED_AFTER_HAVING_BEEN_TAKEN">
+          <Run start="1752044071740" end="1752044121695" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="CHECK_USER_AFFILIATED">
+          <Run start="1752043668641" end="1752043669215" isAutomated="false" />
+          <Run start="1752043666115" end="1752043666544" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="BUGREPORT_SHARING_DECLINED_WHILE_RUNNING">
+          <Run start="1752043671275" end="1752043786104" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="CHECK_DEVICE_OWNER">
+          <Run start="1752043660714" end="1752043661259" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="REMOVE_DEVICE_OWNER">
+          <Run start="1752044360630" end="1752044489359" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="BUGREPORT_SHARING_ACCEPTED_WHILE_RUNNING">
+          <Run start="1752043796892" end="1752044047642" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.notifications.NotificationDismissVerifierActivity">
+        <RunHistory>
+          <Run start="1752045897590" end="1752046324644" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.notifications.NotificationFullScreenIntentVerifierActivity">
+        <RunHistory>
+          <Run start="1752046331061" end="1752046339043" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.notifications.NotificationListenerVerifierActivity">
+        <RunHistory>
+          <Run start="1752046786272" end="1752047379089" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.notifications.ToastVerifierActivity">
+        <RunHistory>
+          <Run start="1752047396284" end="1752047427572" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.projection.list.ProjectionListActivity">
+        <RunHistory>
+          <Run start="1752047696945" end="1752047724473" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.projection.video.ProjectionVideoActivity">
+        <RunHistory>
+          <Run start="1752047726543" end="1752047783414" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.security.CaCertInstallViaIntentTest">
+        <RunHistory>
+          <Run start="1752047818351" end="1752047865801" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.security.IdentityCredentialAuthentication">
+        <RunHistory>
+          <Run start="1752048028650" end="1752048036570" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.security.IdentityCredentialAuthenticationMultiDocument">
+        <RunHistory>
+          <Run start="1752048039800" end="1752048049237" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.security.LockConfirmBypassTest">
+        <RunHistory>
+          <Run start="1752048052684" end="1752048098594" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.security.ProtectedConfirmationTest">
+        <RunHistory>
+          <Run start="1752047788927" end="1752047799861" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.security.ScreenLockBoundKeysTest">
+        <RunHistory>
+          <Run start="1752048105319" end="1752048336286" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.sensors.DynamicSensorDiscoveryTestActivity">
+        <Failure message="&#10;com.android.cts.verifier.sensors.DynamicSensorDiscoveryTestActivity#test0_OnConnect | SKIPPED | [TestExecution] Dynamic sensor discovery not supported, skip.&#10;com.android.cts.verifier.sensors.DynamicSensorDiscoveryTestActivity#test1_DynamicSensorList | SKIPPED | [TestExecution] Dynamic sensor discovery not supported, skip.&#10;com.android.cts.verifier.sensors.DynamicSensorDiscoveryTestActivity#test2_SensorOperation | SKIPPED | [TestExecution] Dynamic sensor discovery not supported, skip.&#10;com.android.cts.verifier.sensors.DynamicSensorDiscoveryTestActivity#test3_OnDisconnect | SKIPPED | [TestExecution] Dynamic sensor discovery not supported, skip.&#10;com.android.cts.verifier.sensors.DynamicSensorDiscoveryTestActivity#test4_OnReconnect | SKIPPED | [TestExecution] Dynamic sensor discovery not supported, skip.&#10;com.android.cts.verifier.sensors.DynamicSensorDiscoveryTestActivity | SKIPPED | Tests passed: 0, Tests skipped: 5, Tests failed: 0&#10;" />
+        <RunHistory>
+          <Run start="1752049432927" end="1752049494286" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.sensors.OffBodySensorTestActivity">
+        <RunHistory>
+          <Run start="1752049496629" end="1752049517694" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.sensors.sixdof.Activities.StartActivity">
+        <RunHistory>
+          <Run start="1752049377940" end="1752049378179" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.speech.tts.TtsTestActivity">
+        <RunHistory>
+          <Run start="1752047432273" end="1752047689388" isAutomated="false" />
+        </RunHistory>
+      </Test>
+      <Test result="pass" name="com.android.cts.verifier.streamquality.StreamingVideoActivity">
+        <RunHistory subtest="com.android.cts.verifier.streamquality.PlayVideoActivity_http_mpeg4_aac">
+          <Run start="1752049536557" end="1752049546042" isAutomated="false" />
+        </RunHistory>
+        <RunHistory subtest="com.android.cts.verifier.streamquality.PlayVideoActivity_http_h264_aac">
+          <Run start="1752049547465" end="1752049557148" isAutomated="false" />
+        </RunHistory>
+      </Test>
+    </TestCase>
+  </Module>
+</Result>

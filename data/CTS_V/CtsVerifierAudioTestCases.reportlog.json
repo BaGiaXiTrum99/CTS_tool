@@ -1,0 +1,8 @@
+{
+  "aec_activity": {},
+  "audio_descriptors_activity": {
+    "claims_hdmi": false,
+    "audio_hal_version": "HIDL:7.1",
+    "audio_descriptor": ""
+  }
+}

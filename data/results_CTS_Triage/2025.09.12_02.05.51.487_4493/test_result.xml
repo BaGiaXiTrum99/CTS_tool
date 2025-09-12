@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no' ?><?xml-stylesheet type="text/xsl" href="compatibility_result.xsl"?>
+<Result start="1757617562215" end="1757617919630" start_display="Fri Sep 12 02:06:02 ICT 2025" end_display="Fri Sep 12 02:11:59 ICT 2025" devices="1000000018075bf8" host_name="vmo-To-Be-Filled-By-O-E-M" java_vendor="Ubuntu" java_version="21.0.8" os_arch="amd64" os_name="Linux" os_version="6.14.0-29-generic" report_version="5.0" suite_build_number="13467367" suite_name="CTS" suite_plan="cts" suite_variant="CTS" suite_version="16_r1" command_line_args="cts -m CtsPermissionUiTestCases -t android.permissionui.cts.PermissionUpgradeTest#testRevokePropagatedOnUpgradeNewToNewModel">
+  <Build device_kernel_info="Linux localhost 6.12.38-gf80e001d864b-v8 #1 SMP PREEMPT Wed Jul 16 19:48:13 UTC 2025 aarch64 Toybox" system_img_info="Cienet/aosp_cnt_car/cnt:16/BP2A.250605.031.A2/eng.cienet:userdebug/test-keys" vendor_img_info="Cienet/aosp_cnt_car/cnt:16/BP2A.250605.031.A2/eng.cienet:userdebug/test-keys" build_abi="arm64-v8a" build_abi2="" build_abis="arm64-v8a" build_abis_32="" build_abis_64="arm64-v8a" build_board="bcm2711" build_bootimage_fingerprint="" build_brand="Cienet" build_device="cnt" build_fingerprint="Cienet/aosp_cnt_car/cnt:16/BP2A.250605.031.A2/eng.cienet:userdebug/test-keys" build_id="BP2A.250605.031.A2" build_manufacturer="Cienet" build_model="Cienet IVI 5" build_product="aosp_cnt_car" build_reference_fingerprint="" build_serial="1000000018075bf8" build_tags="test-keys" build_type="userdebug" build_vendor_fingerprint="Cienet/aosp_cnt_car/cnt:16/BP2A.250605.031.A2/eng.cienet:userdebug/test-keys" build_version_base_os="" build_version_incremental="eng.cienet" build_version_release="16" build_version_sdk="36" build_version_security_patch="2025-06-05" />
+  <Summary pass="1" failed="0" modules_done="1" modules_total="1" />
+  <Module name="CtsPermissionUiTestCases" abi="arm64-v8a" runtime="25435" done="true" pass="1" total_tests="1">
+    <TestCase name="android.permissionui.cts.PermissionUpgradeTest">
+      <Test result="pass" name="testRevokePropagatedOnUpgradeNewToNewModel" />
+    </TestCase>
+  </Module>
+</Result>

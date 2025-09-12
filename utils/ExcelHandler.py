@@ -1,5 +1,5 @@
 from openpyxl.worksheet.worksheet import Worksheet
-from utils.constants import ReportColumn
+from utils.constants import ReportColumn,ReportTriageColumns
 from xml.etree.ElementTree import ElementTree
 
 class ExcelHandler:
@@ -25,7 +25,7 @@ class ExcelHandler:
         ExcelHandler._write_section(ws, title = "[Build Information]", data = build_attribs)
 
     @staticmethod
-    def create_header_row(ws: Worksheet):
+    def create_header_row(ws: Worksheet, is_triage : bool = True):
         """
         Create and write the report header row into the worksheet.
 
@@ -35,9 +35,16 @@ class ExcelHandler:
         Returns:
             The updated worksheet.
         """
-        ws.column_dimensions['B'].width = 30
-
-        headers = [col.value for col in ReportColumn]
+        if is_triage:
+            ws.column_dimensions['B'].width = 35
+            ws.column_dimensions['C'].width = 50
+            ws.column_dimensions['D'].width = 20
+            ws.column_dimensions['E'].width = 50
+            ws.column_dimensions['F'].width = 30
+            headers = [col.value for col in ReportTriageColumns]
+        else:
+            ws.column_dimensions['B'].width = 30
+            headers = [col.value for col in ReportColumn]
         ws.append(headers)
         return ws
 

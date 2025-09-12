@@ -6,10 +6,12 @@ from src.create_subsplans_xml.create_subplans_xml import SubplanGenerator
 from src.gen_report_excel.ResultXMLParser import ResultXMLParser
 from src.gen_report_excel.MultiResultXMLParser import MultiResultXMLParser
 from src.gen_report_excel.ResultXMLParser_CTS_V import ResultXMLParser_CTS_V
+from src.gen_report_excel.ResultXMLTriageParser import ResultXMLTriageParser
 from src.avd_handler.avd_handler import AVDHandler
 from src.cts_handler.cts_handler import CTSHandler
+from src.cts_handler.cts_by_cmdfile_handler import CTSCmdFileHandler
 from utils.logging_setup import configure_logger
-from utils.constants import TimeUnit,CTSRetryType
+from utils.constants import TimeUnit,CTSRetryType,DeviceType
 from utils.StringHandler import StringHandler
 
 import logging
@@ -58,6 +60,16 @@ def handle_cts_runner(args):
     cts_runner = CTSHandler(args.android_cts_path,args.cmd,args.retry_time,args.retry_type,args.is_headless,args.restart_avd)
     cts_runner.run_cts()
 
+def handle_gen_report_triage(args):
+    logger.info(f"Running Feature Generate Report CTS Triage with args: {args}")
+    result_triage_parser = ResultXMLTriageParser(args.path,args.time_unit,args.output_dir)
+    result_triage_parser.parsing_all_results_file()
+
+def handle_cts_by_cmdfile(args):
+    logger.info(f"Running Feature Run CTS By Cmd File with args: {args}")
+    cts_cmdfile_runner = CTSCmdFileHandler(args.android_cts_path,args.cmd_file_path,args.device_type,args.restart)
+    cts_cmdfile_runner.run_cts_by_cmdfile()
+
 def main():
     load_dotenv()
     parser = argparse.ArgumentParser(description="Tool đa chức năng cho CTS")
@@ -72,7 +84,7 @@ def main():
     )
 
     default_is_headless = StringHandler.str2bool(os.getenv("IS_HEADLESS", "False"))
-    default_restart_avd = StringHandler.str2bool(os.getenv("NEED_RESTART_AVD", "True"))
+    default_restart = StringHandler.str2bool(os.getenv("NEED_RESTART", "True"))
 
     #Folder CTS_Tool
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -107,7 +119,7 @@ def main():
     avd_parser.add_argument("--emulator_path", required=False, default = '/home/'+getpass.getuser()+'/Android/Sdk/emulator/emulator', help="Đường dẫn tới android emulator")
     avd_parser.add_argument("--timeout", type=int, default = 2, help="Timeout (days) của feature này")
     avd_parser.add_argument("--is_headless", required=False, type=StringHandler.str2bool, default = default_is_headless, help="True nếu chạy avd ở chế độ headless")
-    avd_parser.add_argument("--restart_avd", required=False, type=StringHandler.str2bool, default = default_restart_avd, help = "True nếu muốn restart lại avd để refresh môi trường, False nếu bạn muốn giữ lại để debug")
+    avd_parser.add_argument("--restart_avd", required=False, type=StringHandler.str2bool, default = default_restart, help = "True nếu muốn restart lại avd để refresh môi trường, False nếu bạn muốn giữ lại để debug")
     avd_parser.set_defaults(func=handle_avd)
 
     # --- Feature 5: Run CTS Continuously ---
@@ -117,7 +129,7 @@ def main():
     cts_runner_parser.add_argument("--retry_time",required=False, type = int, default = int(os.getenv("CTS_RETRY_TIME", 5)), help = "Số lần retry ( không bao gồm lần đầu chạy)")
     cts_runner_parser.add_argument("--retry_type",required=False, choices=[retry_type.value for retry_type in CTSRetryType], default = os.getenv("CTS_RETRY_TYPE", CTSRetryType.DEFAULT.value), help = "Kiểu retry, chọn giữa DEFAULT, NOT_EXECUTED hay FAILED")
     cts_runner_parser.add_argument("--is_headless", required=False, type=StringHandler.str2bool, default = default_is_headless, help="True nếu chạy avd ở chế độ headless")
-    cts_runner_parser.add_argument("--restart_avd",required=False, type=StringHandler.str2bool, default = default_restart_avd, help = "True nếu muốn restart lại avd để refresh môi trường, False nếu bạn muốn giữ lại để debug")
+    cts_runner_parser.add_argument("--restart_avd",required=False, type=StringHandler.str2bool, default = default_restart, help = "True nếu muốn restart lại avd để refresh môi trường, False nếu bạn muốn giữ lại để debug")
     cts_runner_parser.set_defaults(func=handle_cts_runner)
 
     # --- Feature 6: multi-gen-report ---
@@ -126,6 +138,21 @@ def main():
     multi_report_parser.add_argument("--time_unit", choices=["ms", "s", "h/m/s"], default="h/m/s", help="Đơn vị thời gian")
     multi_report_parser.add_argument("--output_dir", default=base_dir+'/result/CTS', help="Save result excel folder")
     multi_report_parser.set_defaults(func=handle_multi_gen_report)
+
+    # --- Feature 7: Run CTS By CmdFile ---
+    cts_runner_parser = subparsers.add_parser("cts-runner-by-cmdfile", help="Tự động chạy CTS command theo file CmdFile.txt")
+    cts_runner_parser.add_argument("--android_cts_path",required=False, default = '/home/'+getpass.getuser()+'/Documents/CTS/'+os.getenv("CTS_VERSION_NAME","android-cts-14_r7-linux_x86-x86")+'/android-cts', help = 'Đường dẫn tới thư mục andoird-cts')
+    cts_runner_parser.add_argument("--cmd_file_path",required=False, default=base_dir+'/data/cmdfile/cmdfile.txt', help = 'Đường dẫn tới file cmdfile.txt')
+    cts_runner_parser.add_argument("--device_type", required=False, choices=[device_type.value for device_type in DeviceType], default=os.getenv("DEVICE_TYPE", DeviceType.AVD.value), help="Choosing the device type is AVD (Android Virtual Device) or real DUT (Device Under Test)")
+    cts_runner_parser.add_argument("--restart",required=False, type=StringHandler.str2bool, default = default_restart, help = "True nếu muốn restart lại device để refresh môi trường, False nếu bạn muốn giữ lại để debug")
+    cts_runner_parser.set_defaults(func=handle_cts_by_cmdfile)
+
+    # --- Feature 8: Gen Report of Triage Cases ---
+    gen_report_triage_parser = subparsers.add_parser("gen-report-triage", help="Phân tích kết quả và sinh báo cáo Excel CTS đối với các case triage (cần chi tiết từng test case)")
+    gen_report_triage_parser.add_argument("--path", required=False, default = './data/results_CTS_Triage', help="Thư mục chứa các report folder của CTS")
+    gen_report_triage_parser.add_argument("--time_unit", choices=["ms", "s", "h/m/s"], default="h/m/s", help="Đơn vị thời gian")
+    gen_report_triage_parser.add_argument("--output_dir", default=base_dir+'/result/CTS_Triage', help="Save result excel folder")
+    gen_report_triage_parser.set_defaults(func=handle_gen_report_triage)
 
     # Parse và gọi hàm tương ứng
     args = parser.parse_args()

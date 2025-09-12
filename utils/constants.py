@@ -22,7 +22,19 @@ class ReportColumnCTS_V(Enum):
     RESULT = "Result"
     EXECUTION_TIME = "Execution Time"
 
+class ReportTriageColumns(Enum):
+    NO = "No"
+    MODULES = "Modules"
+    TEST_CASE = "Test Case"
+    RESULT = "Result"
+    DETAIL = "Detail"
+    LOG_FOLDER = "Log Folder"
+    
 class CTSRetryType(Enum):
     DEFAULT = "DEFAULT"
     NOT_EXECUTED = "NOT_EXECUTED"
     FAILED = "FAILED"
+
+class DeviceType(Enum):
+    DUT = "DUT"
+    AVD = "AVD"
