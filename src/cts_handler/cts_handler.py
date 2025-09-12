@@ -6,7 +6,6 @@ import time
 
 from src.avd_handler.avd_handler import AVDHandler,CTS_PROCESS_NAME
 from utils.process_handler import ProcessHandler
-from utils.running_commands import Commands
 from utils.constants import CTSRetryType
 
 logger = logging.getLogger("cts_logger." + __name__)
@@ -108,6 +107,7 @@ class CTSHandler:
         output_thread = threading.Thread(target=self.__read_output, name="CTSOutputThread", daemon= True)
         output_thread.start()
 
+        # Bắt đầu thread đọc error sau khi proc được khởi tạo
         logger.info(f"{CTS_RUNNER_PREFIX} Start thread reading error")
         error_thread = threading.Thread(target=self.__read_error, name="CTSErrorThread", daemon= True)
         error_thread.start()

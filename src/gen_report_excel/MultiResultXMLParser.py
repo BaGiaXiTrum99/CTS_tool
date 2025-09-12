@@ -158,9 +158,10 @@ class MultiResultXMLParser:
                 if old_module_execution_time != module_execution_time:
                     module_infor[ReportColumn.EXECUTION_TIME.value] = TimeHandler.sum_durations(module_infor[ReportColumn.EXECUTION_TIME.value],module_execution_time)
                     old_module_execution_time = module_execution_time
-                else:
+                else:   
+                    logger.debug(module_infor)
                     continue
-                logger.debug(module_infor)
+
             self.__write_module_row(ws, idx_row , module_infor)
             idx_row += 1
             for key in (ReportColumn.PASSED.value, 

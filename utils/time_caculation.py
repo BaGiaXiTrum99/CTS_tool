@@ -63,3 +63,5 @@ class TimeHandler:
         elif time_unit == TimeUnit.MS.value:
             execution_time = str(execution_time) + "ms"
             logger.debug(f"Execution Time: {execution_time} {time_unit}")
+            
+        return execution_time

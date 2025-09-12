@@ -1,6 +1,5 @@
 import os
 import re
-import math
 import logging
 import xml.etree.cElementTree as ET
 from xml.etree.ElementTree import Element
