@@ -68,9 +68,10 @@ class ResultXMLTriageParser:
                 test_step_result = test_step.get("result")
                 logger.debug(f"Found Test {test_step_name} with result {test_step_result}") 
                 
-                # TODO: Add them log fail từ StackTrace 
                 if test_step_result == "fail":
-                    failure_message = test_step.find(".Failure").get("message")
+                    failure_message = test_step.find(".Failure").find(".StackTrace").text
+                    if failure_message.startswith("="): 
+                        failure_message = "'" + failure_message
                     logger.debug(f"Got fail message: {failure_message}")
                 else:
                     failure_message = None
