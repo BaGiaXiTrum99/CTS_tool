@@ -60,10 +60,8 @@ class ResultXMLParser:
         ExcelHandler.write_metadata_sheet(meta_ws,self.__root)
 
         ws : Worksheet = wb.create_sheet(title="CTS Report",index = 1)
-        ws.column_dimensions['B'].width = 30
-        # Ghi header
-        headers = [col.value for col in ReportColumn]
-        ws.append(headers)
+        ws = ExcelHandler.create_header_row(ws,is_triage=False)
+        
         totals = {
             ReportColumn.PASSED.value: 0,
             ReportColumn.FAILED.value: 0,
