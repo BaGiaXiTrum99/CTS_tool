@@ -1,4 +1,5 @@
 from openpyxl.worksheet.worksheet import Worksheet
+from openpyxl.styles import Font
 from utils.constants import ReportColumn,ReportTriageColumns
 from xml.etree.ElementTree import ElementTree
 
@@ -45,7 +46,11 @@ class ExcelHandler:
         else:
             ws.column_dimensions['B'].width = 30
             headers = [col.value for col in ReportColumn]
-        ws.append(headers)
+        # Ghi header trực tiếp vào row 1 và set font bold
+        for idx, header in enumerate(headers, start=1):
+            cell = ws.cell(row=1, column=idx, value=header)
+            cell.font = Font(bold=True)
+
         return ws
 
     @staticmethod
@@ -61,3 +66,9 @@ class ExcelHandler:
         ws.append([title])
         for key, value in data.items():
             ws.append([key, value])
+
+    @staticmethod
+    def set_height_of_row(ws: Worksheet, height : int = 17):
+        for row in range(1, ws.max_row + 1):
+            ws.row_dimensions[row].height = height
+        return ws

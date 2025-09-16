@@ -1,5 +1,4 @@
 import os
-import re
 import logging
 import xml.etree.cElementTree as ET
 from xml.etree.ElementTree import Element,ElementTree
@@ -61,6 +60,7 @@ class ResultXMLTriageParser:
 
         test_cnt = 0
         for test_case in test_cases:
+            test_case_prefix_name = test_case.get('name')
             logger.debug(f"Parsing test case {test_case.get('name')}")
             for test_step in test_case.findall(".Test"):
                 test_step_name = test_step.get('name')
@@ -78,7 +78,7 @@ class ResultXMLTriageParser:
 
                 test_case_infor = {
                     ReportTriageColumns.MODULES.value  : name,
-                    ReportTriageColumns.TEST_CASE.value   : test_step_name,
+                    ReportTriageColumns.TEST_CASE.value   : test_case_prefix_name + "#" + test_step_name,
                     ReportTriageColumns.RESULT.value   : test_step_result,
                     ReportTriageColumns.DETAIL.value : failure_message,
                     ReportTriageColumns.LOG_FOLDER.value : report_file
@@ -113,5 +113,6 @@ class ResultXMLTriageParser:
 
         output_file = f"{self.output_dir}/myresult_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
+        ws = ExcelHandler.set_height_of_row(ws)
         wb.save(output_file)
         logger.info(f"Saved result to {output_file}")
