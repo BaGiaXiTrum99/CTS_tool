@@ -10,6 +10,7 @@ from src.cts_handler.cts_handler import END_STRING,CTS_RUNNER_PREFIX
 
 WAIT_PROCESS_TIMEOUT = 10000
 WAIT_ADB_REBOOT_TIME = 45
+ADB_LOST_CONNECTION_MSG = "error: no devices/emulators found"
 logger = logging.getLogger("cts_logger." + __name__)
 
 class CTSCmdFileHandler:
@@ -31,6 +32,7 @@ class CTSCmdFileHandler:
             text=True,  # để giao tiếp bằng chuỗi
             bufsize=1   # dòng nào ra dòng đó
         )
+        time.sleep(2)
         return cts_tf_proc
     
     def __send_cts_command(self, cmd):
@@ -49,6 +51,11 @@ class CTSCmdFileHandler:
             if not line:
                 break
             logger.error(f"{CTS_RUNNER_PREFIX} " + line.strip())
+
+    def __terminate_program(self):
+        self.__send_cts_command("exit")
+        self.__kill_cts_tradefed()
+        logger.info(f"{CTS_RUNNER_PREFIX} CTS execution finished.")
 
     def __kill_cts_tradefed(self):
         logger.info(f"{CTS_RUNNER_PREFIX} Kill CTS Tradefed if existed")
@@ -93,15 +100,15 @@ class CTSCmdFileHandler:
         for cmd in cmd_list:
             self.command_done.clear()
             if self.restart:
-                Commands.execute_short_cmd("adb reboot")
+                _,stderr = Commands.execute_short_cmd("adb reboot")
+                if ADB_LOST_CONNECTION_MSG in stderr:
+                    break
                 time.sleep(WAIT_ADB_REBOOT_TIME)
             self.__send_cts_command(cmd)
             if self.command_done.is_set() == False:
                 self.command_done.wait(timeout=WAIT_PROCESS_TIMEOUT)
 
-        self.__send_cts_command("exit")
-        self.__kill_cts_tradefed()
-        logger.info(f"{CTS_RUNNER_PREFIX} CTS execution finished.")
+        self.__terminate_program()
 
 
 
