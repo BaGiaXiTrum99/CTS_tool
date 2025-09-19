@@ -1,5 +1,6 @@
 import os
 import logging
+import shutil
 import xml.etree.cElementTree as ET
 from xml.etree.ElementTree import Element,ElementTree
 from openpyxl import Workbook
@@ -18,17 +19,18 @@ class ResultXMLTriageParser:
         self.time_unit = time_unit
         self.output_dir = output_dir
         self.index_row = 1
+        self.recheck_module = []
 
     def __search_all_single_result_folder(self):
         report_files = []
         for subfolder in os.scandir(self.result_path):
             if subfolder.is_dir():
                 if os.path.exists(subfolder.path+'/test_result.xml'):
-                    logger.info(f'Found valid folder path {subfolder.path}')
+                    logger.info(f'Found valid subfolder path {subfolder.path}')
                     report_files.append(subfolder.path+'/test_result.xml')
                 else:
-                    logger.error(f'Folder {subfolder.path} is not containing test_result.xml, can not parse')
-        assert len(report_files), 'Length of results not be zero!!!'
+                    logger.error(f'Subfolder {subfolder.path} is not containing test_result.xml, can not parse')
+        assert len(report_files) > 0, 'Length of results should not be zero!!!'
         return sorted(report_files)
 
     def __get_root_of_result_file(self,report_file):
@@ -57,6 +59,15 @@ class ResultXMLTriageParser:
 
         test_cases = module.findall(".TestCase")
         logger.info(f"Found {len(test_cases)} test cases")
+        if len(test_cases) == 0:
+            logger.error(f"Remove {report_file} since there is no test was found")
+            shutil.rmtree(report_file)
+            return
+
+        if module.get("done") == "false":
+            logger.error(f"Remove {report_file} since the module is not finished running")
+            shutil.rmtree(report_file)
+            return
 
         test_cnt = 0
         for test_case in test_cases:
@@ -70,6 +81,7 @@ class ResultXMLTriageParser:
                 
                 if test_step_result == "fail":
                     failure_message = test_step.find(".Failure").find(".StackTrace").text
+                    # failure_message = test_step.find(".Failure").get("message")
                     if failure_message.startswith("="): 
                         failure_message = "'" + failure_message
                     logger.debug(f"Got fail message: {failure_message}")
@@ -81,7 +93,7 @@ class ResultXMLTriageParser:
                     ReportTriageColumns.TEST_CASE.value   : test_case_prefix_name + "#" + test_step_name,
                     ReportTriageColumns.RESULT.value   : test_step_result,
                     ReportTriageColumns.DETAIL.value : failure_message,
-                    ReportTriageColumns.LOG_FOLDER.value : report_file
+                    ReportTriageColumns.LOG_FOLDER.value : os.path.basename(report_file)
                 }
                 test_cnt += 1
                 self.__write_module_row(ws,test_case_infor)
@@ -108,8 +120,12 @@ class ResultXMLTriageParser:
             logger.info(f"Parsing XML result file {report_file}")
             root = self.__get_root_of_result_file(report_file)
             modules = self.__get_list_modules_name(root)
+            if len(modules) == 0:
+                logger.error(f"Remove {report_file} since there is no module was found")
+                shutil.rmtree((os.path.dirname(report_file)))
+                break
             for module in modules:
-                self.__parser_module_to_excel(ws, module, os.path.basename(os.path.dirname(report_file)))
+                self.__parser_module_to_excel(ws, module, os.path.dirname(report_file))
 
         output_file = f"{self.output_dir}/myresult_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
