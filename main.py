@@ -57,7 +57,7 @@ def handle_avd(args):
 
 def handle_cts_runner(args):
     logger.info(f"Running Feature Run CTS continuously with args: {args}")
-    cts_runner = CTSHandler(args.android_cts_path,args.cmd,args.retry_time,args.retry_type,args.is_headless,args.restart_avd)
+    cts_runner = CTSHandler(args.android_cts_path,args.cmd,args.retry_time,args.retry_type,args.device_type,args.is_headless,args.restart)
     cts_runner.run_cts()
 
 def handle_gen_report_triage(args):
@@ -128,8 +128,9 @@ def main():
     cts_runner_parser.add_argument("--cmd", required=False, default = os.getenv("CTS_COMMAND", "run cts -m CtsPerfettoTestCases -t HeapprofdCtsTest#ReleaseAppRuntime"), help="Command chạy CTS trong CTS-Tradefed")
     cts_runner_parser.add_argument("--retry_time",required=False, type = int, default = int(os.getenv("CTS_RETRY_TIME", 5)), help = "Số lần retry ( không bao gồm lần đầu chạy)")
     cts_runner_parser.add_argument("--retry_type",required=False, choices=[retry_type.value for retry_type in CTSRetryType], default = os.getenv("CTS_RETRY_TYPE", CTSRetryType.DEFAULT.value), help = "Kiểu retry, chọn giữa DEFAULT, NOT_EXECUTED hay FAILED")
+    cts_runner_parser.add_argument("--device_type", required=False, choices=[device_type.value for device_type in DeviceType], default=os.getenv("DEVICE_TYPE", DeviceType.AVD.value), help="Choosing the device type is AVD (Android Virtual Device) or real DUT (Device Under Test)")
     cts_runner_parser.add_argument("--is_headless", required=False, type=StringHandler.str2bool, default = default_is_headless, help="True nếu chạy avd ở chế độ headless")
-    cts_runner_parser.add_argument("--restart_avd",required=False, type=StringHandler.str2bool, default = default_restart, help = "True nếu muốn restart lại avd để refresh môi trường, False nếu bạn muốn giữ lại để debug")
+    cts_runner_parser.add_argument("--restart",required=False, type=StringHandler.str2bool, default = default_restart, help = "True nếu muốn restart lại avd để refresh môi trường, False nếu bạn muốn giữ lại để debug")
     cts_runner_parser.set_defaults(func=handle_cts_runner)
 
     # --- Feature 6: multi-gen-report ---

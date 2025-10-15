@@ -6,3 +6,5 @@ __pycache__
 .venv
 .env
 test.py
+test.sh
+abc.txt

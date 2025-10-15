@@ -133,7 +133,7 @@ class ResultXMLParser:
         assumption_failure = 0
         ignored = 0
         for test_case in test_cases:
-            logger.debug(f"Parsing test case {test_case.get('name')}")
+            logger.info(f"Parsing test case {test_case.get('name')}")
             for test_step in test_case.findall(".Test"):
                 test_step_name = test_step.get('name')
                 test_step_result = test_step.get("result")

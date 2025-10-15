@@ -6,24 +6,28 @@ import time
 
 from src.avd_handler.avd_handler import AVDHandler,CTS_PROCESS_NAME
 from utils.process_handler import ProcessHandler
-from utils.constants import CTSRetryType
+from utils.constants import CTSRetryType,DeviceType
+from utils.running_commands import Commands
 
 logger = logging.getLogger("cts_logger." + __name__)
 
 WAIT_PROCESS_TIMEOUT = 60000
 END_STRING = "=================== End ===================="
 CTS_RUNNER_PREFIX = "[CTS_RUNNER]" 
+WAIT_ADB_REBOOT_TIME = 45
+ADB_LOST_CONNECTION_MSG = "error: no devices/emulators found"
 
 class CTSHandler:
-    def __init__(self,android_cts_path : str ,cmd : str ,retry_time : int ,retry_type : str , is_headless : bool, restart_avd : bool):
+    def __init__(self,android_cts_path : str ,cmd : str ,retry_time : int ,retry_type : str , device_type : str, is_headless : bool, restart : bool):
         self.android_cts_path = android_cts_path
         self.cts_tradefed = self.android_cts_path + '/tools/cts-tradefed'
         self.cmd = cmd
         self.retry_time = retry_time
         self.retry_type = retry_type
+        self.device_type = device_type
         self.cts_tf_proc = None
         self.is_headless = is_headless
-        self.restart_avd = restart_avd
+        self.restart = restart
         self.command_done = threading.Event()
 
     def __open_tradefed_session(self):
@@ -98,9 +102,9 @@ class CTSHandler:
 
     def __execute_cts_run_command_and_retry(self):
         self.cts_tf_proc = self.__open_tradefed_session()
-        if self.restart_avd:
-            logger.info(f"{CTS_RUNNER_PREFIX} We wait 60 secs for restarting AVD")
-            time.sleep(60)
+        if self.restart:
+            logger.info(f"{CTS_RUNNER_PREFIX} We wait {WAIT_ADB_REBOOT_TIME} secs for restarting device")
+            time.sleep(WAIT_ADB_REBOOT_TIME)
 
         # Bắt đầu thread đọc output sau khi proc được khởi tạo
         logger.info(f"{CTS_RUNNER_PREFIX} Start thread reading output")
@@ -130,18 +134,38 @@ class CTSHandler:
             emulator_path = '/home/'+getpass.getuser()+'/Android/Sdk/emulator/emulator',
             timeout = 3,
             is_headless = self.is_headless,
-            restart_avd = self.restart_avd
+            restart_avd = self.restart
         )
         self.avd.keep_avd_alive()
 
     def run_cts(self):
-        logger.info(f"{CTS_RUNNER_PREFIX} Initialize Thread CTS and AVD")
-        cts_thread = threading.Thread(target=self.__execute_cts_run_command_and_retry)
-        monitor_thread = threading.Thread(target=self.monitoring_avd, daemon=True)  # daemon để tự thoát khi main thread kết thúc
+        if self.device_type == DeviceType.AVD:
+            logger.info(f"{CTS_RUNNER_PREFIX} Initialize Thread AVD")
+            monitor_thread = threading.Thread(target=self.monitoring_avd, daemon=True)  # daemon để tự thoát khi main thread kết thúc
+            monitor_thread.start()
+        else:
+            logger.info(f"{CTS_RUNNER_PREFIX} Checking DUT status")
+            # Now check if boot completed
+            proc = subprocess.run(
+                ["adb", "shell", "getprop", "sys.boot_completed"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=5,
+            )
+            if proc.returncode != 0:
+                logger.error("%s Connection error: %s", CTS_RUNNER_PREFIX, proc.stderr.strip())
+                raise RuntimeError("ADB command failed")
 
-        logger.info(f"{CTS_RUNNER_PREFIX} Start Thread CTS and AVD")
+            logger.info(f"{CTS_RUNNER_PREFIX} Checking DUT status : OK")
+            if self.restart:
+                logger.info(f"{CTS_RUNNER_PREFIX} Restarting the device")
+                subprocess.run(["adb", "reboot"], check=False)
+
+        logger.info(f"{CTS_RUNNER_PREFIX} Initialize Thread CTS")
+        cts_thread = threading.Thread(target=self.__execute_cts_run_command_and_retry)
+        logger.info(f"{CTS_RUNNER_PREFIX} Start Thread CTS")
         cts_thread.start()
-        monitor_thread.start()
         
         cts_thread.join() 
         logger.info(f"{CTS_RUNNER_PREFIX} End Thread CTS and AVD")

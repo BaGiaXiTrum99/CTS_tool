@@ -80,7 +80,7 @@ class CTSCmdFileHandler:
     def __read_cmd_file(self) -> list:
         with open(self.cmd_file_path,'r') as f:
             cmd_list = f.readlines()
-        return [cmd.strip() for cmd in cmd_list]
+        return [cmd.strip() for cmd in cmd_list if cmd.strip() != ""]
 
     def run_cts_by_cmdfile(self):
         logger.info(f"{CTS_RUNNER_PREFIX} Initialize Thread CTS")
@@ -100,6 +100,7 @@ class CTSCmdFileHandler:
         for cmd in cmd_list:
             self.command_done.clear()
             if self.restart:
+                logger.info(f"{CTS_RUNNER_PREFIX} We wait {WAIT_ADB_REBOOT_TIME} secs for restarting device")
                 _,stderr = Commands.execute_short_cmd("adb reboot")
                 if ADB_LOST_CONNECTION_MSG in stderr:
                     break

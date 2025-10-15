@@ -72,7 +72,7 @@ class ResultXMLTriageParser:
         test_cnt = 0
         for test_case in test_cases:
             test_case_prefix_name = test_case.get('name')
-            logger.debug(f"Parsing test case {test_case.get('name')}")
+            logger.info(f"Parsing test case {test_case.get('name')}")
             for test_step in test_case.findall(".Test"):
                 test_step_name = test_step.get('name')
                 

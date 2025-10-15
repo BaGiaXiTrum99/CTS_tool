@@ -1,8 +1,10 @@
 import logging
 import os
+import shutil
 import glob
 from colorama import init, Fore, Style
 from logging.handlers import RotatingFileHandler
+from typing import Optional,Iterable
 init(autoreset=True)
 
 class ColoredFormatter(logging.Formatter):
@@ -24,6 +26,59 @@ class ColoredFormatter(logging.Formatter):
 app_logger = logging.getLogger("cts_logger")
 # Ban đầu không cần set level hay handlers ở đây.
 # Việc cấu hình sẽ được làm trong main.py
+
+def _center_line(text: str, width: int) -> str:
+    return text.center(width)
+
+def build_banner_lines(
+    title: str = "WELCOME",
+    subtitle: Optional[str] = None,
+    *,
+    margin: int = 2,
+    scale: int = 2,  # phóng to 2×
+) -> list[str]:
+    cols = shutil.get_terminal_size((100, 20)).columns
+    cols = max(40, cols - margin * 2)
+
+    lines = [title.strip()]
+    if subtitle and subtitle.strip():
+        for s in subtitle.splitlines():
+            s = s.strip()
+            if s:
+                lines.append(s)
+
+    pad_x = 4 * max(1, scale)        # ngang
+    vpad = 1 * max(1, scale)         # dọc
+
+    max_text = max(len(s) for s in lines)
+    content_w = min(cols - 4, max(max_text, 10) + pad_x * 2)
+    total_w = content_w + 4
+    left_pad = " " * margin
+
+    top_bottom = "=" * total_w
+    out = [left_pad + top_bottom]
+    for _ in range(vpad):
+        out.append(left_pad + f"||{' ' * content_w}||")
+    for s in lines:
+        centered = _center_line(s, content_w)
+        out.append(left_pad + f"||{centered}||")
+    for _ in range(vpad):
+        out.append(left_pad + f"||{' ' * content_w}||")
+    out.append(left_pad + top_bottom)
+    return out
+
+def write_banner(logger: logging.Logger, banner_lines: Iterable[str]) -> None:
+    """Ghi banner thẳng vào stream của mọi handler (console + file), bỏ qua formatter."""
+    for h in logger.handlers:
+        stream = getattr(h, "stream", None)
+        if stream is None:
+            continue
+        for line in banner_lines:
+            stream.write(line + "\n")
+        try:
+            stream.flush()
+        except Exception:
+            pass
 
 def configure_logger(level_str: str, log_file: str = "logs/cts.log"):
     """
@@ -73,3 +128,7 @@ def configure_logger(level_str: str, log_file: str = "logs/cts.log"):
     # Quan trọng: Ngăn chặn logger gốc (root logger) xử lý lại các log
     # Nếu không, log có thể bị in ra hai lần
     app_logger.propagate = False
+
+    # Banner khi khởi động logger
+    banner = build_banner_lines("WELCOME", subtitle="Logger is starting…", margin=2, scale=2)
+    write_banner(app_logger, banner)
