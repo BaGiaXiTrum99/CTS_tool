@@ -1,174 +1,291 @@
 # CTS Automation Tool
 
-Công cụ đa chức năng này được thiết kế để tự động hóa các tác vụ liên quan đến việc chạy và phân tích kết quả từ bộ kiểm thử Compatibility Test Suite (CTS) của Android. Nó cung cấp các tính năng để tạo các kế hoạch chạy thử (subplans) và phân tích các tệp kết quả XML để tạo báo cáo Excel chi tiết.
+Công cụ đa chức năng này được thiết kế để **tự động hóa quy trình chạy, giám sát và phân tích kết quả** của bộ kiểm thử **Android Compatibility Test Suite (CTS)**.  
+Mục tiêu là giúp các kỹ sư kiểm thử và tích hợp dễ dàng sinh subplans, chạy lại test tự động (có retry, restart AVD), và xuất báo cáo Excel chi tiết.
 
-## Tính năng
+---
 
-* **Tạo Subplans XML**: Tự động tạo các tệp XML subplan dựa trên danh sách module được cung cấp hoặc tự động thu thập các module có sẵn trên thiết bị đang kiểm tra (DUT). Các module có thể được chia thành nhiều tệp subplan để quản lý việc chạy thử dễ dàng hơn.
-* **Phân tích kết quả và tạo báo cáo Excel**: Phân tích tệp `test_result.xml` do CTS tạo ra và sinh ra một báo cáo Excel chi tiết. Báo cáo này bao gồm thông tin về các module đã chạy, số lượng test case Passed/Failed/Ignored, thời gian thực thi, và tổng hợp kết quả.
-* **Hỗ trợ đa định dạng thời gian**: Thời gian thực thi trong báo cáo có thể được hiển thị dưới nhiều định dạng khác nhau (giây, mili giây, hoặc giờ/phút/giây).
-* **Hỗ trợ khởi động lại avd nếu bị crash khi chạy cts**: Tính năng này giúp đảm bảo AVD (Android Virtual Device) không bị tắt đột ngột, phục vụ cho các pipeline kiểm thử liên tục. AVD sẽ được tự động wipe data và khởi động lại ở lần check đầu tiên để đảm bảo môi trường được refresh.
-* **Log chi tiết**: Ghi lại các hoạt động và lỗi trong quá trình thực thi để dễ dàng gỡ lỗi và theo dõi.
+## ⚙️ Tính năng chính
 
-## Cài đặt
+| Tính năng | Mô tả |
+|------------|--------|
+| **1. Tạo Subplans XML (`gen-subplan`)** | Tự động sinh các tệp XML chứa danh sách module CTS cần chạy. |
+| **2. Sinh báo cáo Excel CTS (`gen-report`)** | Phân tích `test_result.xml` và tạo báo cáo Excel. |
+| **3. Sinh báo cáo CTS Verifier (`gen-report-cts-v`)** | Xử lý kết quả CTS Verifier và sinh file Excel. |
+| **4. Giữ AVD hoạt động liên tục (`keep-avd-alive`)** | Tự động restart AVD nếu bị crash hoặc tắt. |
+| **5. Chạy CTS liên tục (`cts-runner`)** | Tự động chạy CTS với cơ chế retry thông minh. |
+| **6. Sinh báo cáo từ nhiều kết quả (`multi-gen-report`)** | Hợp nhất nhiều folder kết quả CTS vào một báo cáo. |
+| **7. Chạy CTS từ file CmdFile (`cts-runner-by-cmdfile`)** | Chạy tuần tự các lệnh CTS được định nghĩa trong file `cmdfile.txt`. |
+| **8. Báo cáo chi tiết triage (`gen-report-triage`)** | Phân tích chi tiết các test case cần triage để debug lỗi. |
 
-Để cài đặt và chạy công cụ này, bạn cần có Python 3 và các thư viện cần thiết.
+---
 
-1.  **Clone repository:**
-
-    ```bash
-    git clone https://github.com/BaGiaXiTrum99/CTS_tool
-    cd CTS_tool
-    ```
-
-2.  **Cài đặt các thư viện Python:**
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Cấu hình Android SDK và CTS Trade Federation:**
-    Chú ý: Cấu hình này chỉ sử dụng khi cần tính năng tự động gen toàn bộ test modules từ DUT. Nếu không cần dùng thì có thể bỏ qua bước này
-    Công cụ này cũng sử dụng `cts-tradefed` để liệt kê các module. Hãy đảm bảo cts-tradefed có thể hoạt động bình thường trong máy bạn. Bạn cần điều chỉnh đường dẫn đến `cts-tradefed` trong tệp `create_subplans_xml.py` nếu nó khác với mặc định.
-
-    Ví dụ:
-    ```python
-    # Trong src/create_subplans_xml/create_subplans_xml.py
-    cmd: str | list = "/home/ubuntu/Documents/GAS_Cert/CTS/android-cts-14_r8-linux_x86-x86/android-cts/tools/cts-tradefed list modules"
-    ```
-    Thay đổi đường dẫn trên cho phù hợp với môi trường của bạn.
-
-## Hướng dẫn sử dụng
-
-Công cụ này được chạy thông qua dòng lệnh CLI với các tùy chọn khác nhau cho từng tính năng.
-
-### 1\. Sinh file subplans XML
-
-Tính năng này giúp bạn tạo ra các tệp XML chứa danh sách các module CTS cần chạy.
-
-```bash
-python3 main.py gen-subplan [tùy_chọn]
-````
-
-**Tùy chọn:**
-
-  * `--module_list`: (Tùy chọn) Nếu được cung cấp, công cụ sẽ sử dụng danh sách module được định nghĩa sẵn trong `main.py`. Nếu không, nó sẽ tự động thu thập các module từ DUT.
-  * `--folder_path`: (Tùy chọn) Đường dẫn đến thư mục để lưu các tệp subplan XML được tạo ra. Mặc định là `./subplans`.
-  * `--file_num`: (Tùy chọn) Số lượng tệp subplan XML bạn muốn tạo ra. Các module sẽ được chia đều vào các tệp này. Mặc định là 1.
-
-**Ví dụ:**
-
-  * Sinh một tệp subplan với các module tự động thu thập và lưu vào thư mục mặc định:
-
-    ```bash
-    python3 main.py gen-subplan
-    ```
-
-  * Sinh 3 tệp subplan từ danh sách module đã định nghĩa và lưu vào thư mục `./my_custom_subplans`:
-
-    ```bash
-    python3 main.py gen-subplan --module_list True --file_num 3 --folder_path ./my_custom_subplans
-    ```
-
-### 2\. Phân tích kết quả và sinh báo cáo Excel
-
-Tính năng này giúp bạn phân tích tệp `test_result.xml` và tạo báo cáo dưới dạng tệp Excel.
-
-```bash
-python3 main.py gen-report [tùy_chọn]
-```
-
-**Tùy chọn:**
-
-  * `--path`: (Tùy chọn) Đường dẫn đến thư mục chứa tệp `test_result.xml`. Mặc định là `./data/2025.06.27_10.41.58.033_4484`.
-  * `--time_unit`: (Tùy chọn) Đơn vị thời gian cho cột "Execution Time" trong báo cáo. Các lựa chọn: `ms` (mili giây), `s` (giây), `h/m/s` (giờ/phút/giây). Mặc định là `h/m/s`.
-  * `--abi`: (Tùy chọn) Kiến trúc bộ xử lý của thiết bị (ví dụ: `x86_64`, `x86`). Mặc định là `x86_64`.
-  * `--subplans_path`: (Tùy chọn) Đường dẫn đến tệp subplan XML đã được sử dụng để chạy CTS. Mặc định là `./subplans/myplan_1.xml`.
-
-**Ví dụ:**
-
-  * Tạo báo cáo Excel từ tệp kết quả mặc định, với thời gian hiển thị dưới dạng giờ/phút/giây:
-
-    ```bash
-    python3 main.py gen-report
-    ```
-
-  * Tạo báo cáo từ một thư mục kết quả cụ thể, với thời gian hiển thị dưới dạng mili giây và cho kiến trúc `x86_64`:
-
-    ```bash
-    python3 main.py gen-report --path ./my_test_results/latest --time_unit ms --abi x86_64
-    ```
-
-### 3\. Giữ AVD luôn hoạt động (Keep AVD Alive)
-
-Tính năng này giúp bạn phân tích tệp `test_result.xml` và tạo báo cáo dưới dạng tệp Excel.
-
-```bash
-python3 main.py keep-alive-avd [tùy_chọn]
-```
-
-**Tùy chọn:**
-
-  * `--name`: (Tùy chọn) Tên của AVD cần giữ cho hoạt động. Mặc định: `Automotive_1408p_landscape_with_Google_Play_1`.
-
-  * `--emulator_path`: (Tùy chọn) Đường dẫn đầy đủ đến file emulator trong Android SDK. Mặc định: `/home/vmo/Android/Sdk/emulator/emulator`.
-
-  * `--timeout`: (Tùy chọn) Thời gian chạy tối đa của tính năng này, tính bằng ngày. Sau khoảng thời gian này, công cụ sẽ tự dừng. Mặc định: `2` (tức 2 ngày).
-
-**Chức năng:**
-
-  * Theo dõi trạng thái emulator liên tục.
-  * Tự động khởi động lại emulator nếu bị tắt.
-  * Ghi log quá trình giám sát vào thư mục `logs/`.
-
-**Ví dụ:**
-
-    ```bash
-    python3 main.py keep-avd-alive --name Pixel_6_API_34 --emulator_path /home/user/Android/Sdk/emulator/emulator --timeout 1
-
-    ```
-
-## Cấu trúc dự án
+## 🧩 Cấu trúc thư mục dự án
 
 ```
-.
-├── main.py                     # Điểm vào chính của ứng dụng, xử lý các đối số dòng lệnh và điều phối các tính năng.
-├── README.md                   # Mô tả dự án
-├── .gitignore                  # File không được push
-├── requirements.txt            # Danh sách các thư viện python3 cần thiết.
+CTS_tool/
+├── main.py
+├── requirements.txt
+├── .env
+├── README.md
 ├── src/
 │   ├── avd_handler/
-│   │   └── avd_handler.py      # Tự động giữ cho AVD luôn chạy, khởi động lại nếu bị crash.
-│   ├── gen_report_excel/
-│   │   ├── ResultXMLParser.py  # Xử lý tệp XML kết quả CTS và tạo báo cáo Excel.
-│   │   ├── SubplansParser.py   # Phân tích tệp XML subplan để lấy danh sách module.
-│   │   └── SummaryParser.py    # Phân tích tệp invocation_summary.txt để lấy thời gian thực thi module (hiện chưa được tích hợp đầy đủ).
-│   └── create_subsplans_xml/
-│       └── create_subplans_xml.py # Tạo các tệp XML subplan cho CTS.
+│   │   └── avd_handler.py
+│   ├── cts_handler/
+│   │   ├── cts_handler.py
+│   │   └── cts_by_cmdfile_handler.py
+│   ├── create_subsplans_xml/
+│   │   └── create_subplans_xml.py
+│   └── gen_report_excel/
+│       ├── ResultXMLParser.py
+│       ├── MultiResultXMLParser.py
+│       ├── ResultXMLParser_CTS_V.py
+│       └── ResultXMLTriageParser.py
 ├── utils/
-│   ├── __init__.py
-│   ├── constants.py            # Định nghĩa các hằng số (TimeUnit, ReportColumn) được sử dụng trong dự án.
-│   ├── logging_setup.py        # Cấu hình hệ thống ghi log.
-│   ├── running_commands.py     # Cung cấp các hàm để thực thi các lệnh shell.
-│   └── time_caculation.py      # Các hàm tiện ích để phân tích và định dạng thời gian.
-├── script/
-│   ├── open_emulator.sh        # Khởi động emulator ở 2 chế độ headless or normal (wipe data mỗi khi khởi chạy)
-│   └── close_emulator.sh       # Ngắt PID của emulator   
-├── data/                       # Nơi lưu trữ các kết quả CTS 
-├── logs/                       # Log trong quá trình chạy 
-├── subplans/                   # Nơi lưu trữ kết quả gen subplans
-└── result/                     # Nơi chứa kết quả gen report excel
+│   ├── constants.py
+│   ├── logging_setup.py
+│   ├── StringHandler.py
+│   └── time_caculation.py
+├── data/
+│   ├── cmdfile/
+│   │   └── cmdfile.txt
+│   └── results_CTS/
+├── result/
+│   ├── CTS/
+│   ├── CTSV/
+│   └── CTS_Triage/
+├── subplans/
+└── logs/
 ```
 
-## Phát triển
+---
 
-  * Thêm các tính năng mới bằng cách tạo các module trong thư mục `src`.
-  * Sử dụng `utils/logger.py` để ghi log trong các module của bạn.
-  * Tuân thủ cấu trúc dự án hiện có để duy trì tính nhất quán.
+## 🧠 Cài đặt và cấu hình môi trường
 
-## Đóng góp
+### 1. Cài đặt Python và thư viện cần thiết
 
-Chào mừng mọi đóng góp\! Nếu bạn có bất kỳ đề xuất cải tiến hoặc phát hiện lỗi nào, vui lòng mở một "issue" hoặc gửi một "pull request".
-
+```bash
+git clone https://github.com/BaGiaXiTrum99/CTS_tool
+cd CTS_tool
+pip install -r requirements.txt
 ```
+
+### 2. Tạo file `.env`
+
+Tạo file `.env` ở thư mục gốc để định nghĩa các giá trị mặc định tương tự như file `.env.example`
+
+> ✅ Các giá trị trong `.env` có thể được **ghi đè bằng tham số CLI** khi chạy.
+
+---
+
+## 🚀 Hướng dẫn sử dụng chi tiết
+
+Tất cả các tính năng đều được gọi qua CLI bằng cách:
+```bash
+python3 main.py <lệnh> [tùy chọn]
 ```
+
+### 1️⃣ Sinh file Subplans XML
+
+```bash
+python3 main.py gen-subplan [tùy chọn]
+```
+
+**Tùy chọn:**
+| Tham số | Mô tả | Mặc định |
+|----------|--------|-----------|
+| `--use-default-module-list` | Dùng danh sách module mặc định trong `main.py` | `False` |
+| `--folder_path` | Nơi lưu file subplan | `./subplans` |
+| `--file_num` | Số lượng file subplan được tạo | `1` |
+
+**Ví dụ:**
+```bash
+python3 main.py gen-subplan --use-default-module-list --file_num 3
+```
+
+---
+
+### 2️⃣ Sinh báo cáo Excel CTS
+
+```bash
+python3 main.py gen-report [tùy chọn]
+```
+
+**Tùy chọn:**
+| Tham số | Mô tả | Mặc định |
+|----------|--------|-----------|
+| `--path` | Đường dẫn tới folder chứa `test_result.xml` | `./data/2025.07.10_08.36.27.870_3983` |
+| `--time_unit` | Đơn vị thời gian hiển thị (`ms`, `s`, `h/m/s`) | `h/m/s` |
+| `--subplans_path` | Đường dẫn tới subplan XML (nếu cần đối chiếu) | `None` |
+| `--output_dir` | Folder lưu báo cáo Excel | `./result/CTS` |
+
+**Ví dụ:**
+```bash
+python3 main.py gen-report --path ./data/latest_run --time_unit s
+```
+
+---
+
+### 3️⃣ Sinh báo cáo CTS Verifier
+
+```bash
+python3 main.py gen-report-cts-v [tùy chọn]
+```
+
+**Tùy chọn:**
+| Tham số | Mô tả | Mặc định |
+|----------|--------|-----------|
+| `--path` | Thư mục chứa kết quả CTS Verifier | `./data/CTS_V` |
+| `--time_unit` | Đơn vị thời gian (`ms`, `s`, `h/m/s`) | `h/m/s` |
+| `--output_dir` | Folder lưu báo cáo Excel | `./result/CTSV` |
+
+**Ví dụ:**
+```bash
+python3 main.py gen-report-cts-v --path ./data/cts_verifier_results
+```
+
+---
+
+### 4️⃣ Giữ AVD luôn hoạt động
+
+```bash
+python3 main.py keep-avd-alive [tùy chọn]
+```
+
+**Tùy chọn:**
+| Tham số | Mô tả | Mặc định |
+|----------|--------|-----------|
+| `--name` | Tên AVD | `Automotive_1408p_landscape_with_Google_Play_1` |
+| `--emulator_path` | Đường dẫn emulator | `/home/<user>/Android/Sdk/emulator/emulator` |
+| `--timeout` | Thời gian chạy (ngày) | `2` |
+| `--is_headless` | Chạy không hiển thị UI | Theo `.env` |
+| `--restart_avd` | Tự restart khi crash | Theo `.env` |
+
+**Ví dụ:**
+```bash
+python3 main.py keep-avd-alive --name Pixel_6_API_34 --timeout 1
+```
+
+---
+
+### 5️⃣ Chạy CTS tự động liên tục
+
+```bash
+python3 main.py cts-runner [tùy chọn]
+```
+
+**Tùy chọn:**
+| Tham số | Mô tả | Mặc định |
+|----------|--------|-----------|
+| `--android_cts_path` | Đường dẫn tới `android-cts` | Theo `.env` |
+| `--cmd` | Lệnh chạy CTS | Theo `.env` |
+| `--retry_time` | Số lần retry (không tính lần đầu) | `5` |
+| `--retry_type` | Kiểu retry (`DEFAULT`, `FAILED`, `NOT_EXECUTED`) | `DEFAULT` |
+| `--device_type` | Kiểu thiết bị (`AVD`, `DUT`) | `AVD` |
+| `--is_headless` | Chạy headless | Theo `.env` |
+| `--restart` | Restart môi trường sau mỗi vòng | Theo `.env` |
+
+**Ví dụ:**
+```bash
+python3 main.py cts-runner --cmd "run cts -m CtsMediaTestCases"
+```
+
+---
+
+### 6️⃣ Sinh báo cáo từ nhiều kết quả CTS
+
+```bash
+python3 main.py multi-gen-report [tùy chọn]
+```
+
+**Tùy chọn:**
+| Tham số | Mô tả | Mặc định |
+|----------|--------|-----------|
+| `--path` | Thư mục chứa nhiều folder kết quả CTS | `./data/results_CTS` |
+| `--time_unit` | Đơn vị thời gian (`ms`, `s`, `h/m/s`) | `h/m/s` |
+| `--output_dir` | Folder lưu báo cáo Excel | `./result/CTS` |
+
+**Ví dụ:**
+```bash
+python3 main.py multi-gen-report --path ./data/all_results
+```
+
+---
+
+### 7️⃣ Chạy CTS từ file CmdFile.txt
+
+```bash
+python3 main.py cts-runner-by-cmdfile [tùy chọn]
+```
+
+**Tùy chọn:**
+| Tham số | Mô tả | Mặc định |
+|----------|--------|-----------|
+| `--android_cts_path` | Đường dẫn tới CTS | Theo `.env` |
+| `--cmd_file_path` | Đường dẫn tới `cmdfile.txt` | `./data/cmdfile/cmdfile.txt` |
+| `--device_type` | Thiết bị (`AVD`, `DUT`) | `AVD` |
+| `--restart` | Restart giữa các run | Theo `.env` |
+
+**Ví dụ:**
+```bash
+python3 main.py cts-runner-by-cmdfile --cmd_file_path ./data/cmdfile/mylist.txt
+```
+
+---
+
+### 8️⃣ Sinh báo cáo CTS Triage
+
+```bash
+python3 main.py gen-report-triage [tùy chọn]
+```
+
+**Tùy chọn:**
+| Tham số | Mô tả | Mặc định |
+|----------|--------|-----------|
+| `--path` | Thư mục chứa các folder kết quả CTS | `./data/results_CTS_Triage` |
+| `--time_unit` | Đơn vị thời gian (`ms`, `s`, `h/m/s`) | `h/m/s` |
+| `--output_dir` | Folder lưu báo cáo Excel | `./result/CTS_Triage` |
+
+---
+
+## 🪵 Logging
+
+Cấu hình log được định nghĩa trong `utils/logging_setup.py`.  
+Theo mặc định, log được in ra console và lưu vào `logs/` với định dạng thời gian, cấp độ, và tên module.
+
+Ví dụ dòng log:
+```
+2025-10-28 13:45:12,913 - cts_logger.main - INFO - Running Feature Generate Report CTS with args: ...
+```
+
+---
+
+## 🧰 Phát triển và mở rộng
+
+- Thêm chức năng mới bằng cách tạo module trong `src/`.
+- Dùng `configure_logger()` trong `utils/logging_setup.py` để ghi log.
+- Mọi feature mới nên được thêm vào `main.py` qua `subparsers.add_parser()`.
+
+---
+
+## 🤝 Đóng góp
+
+1. Fork repo.  
+2. Tạo branch mới (`feature/...` hoặc `fix/...`).  
+3. Commit theo chuẩn:  
+   ```bash
+   git commit -m "[fix] đồng bộ lệnh keep-avd-alive với README"
+   ```  
+4. Gửi pull request mô tả chi tiết thay đổi.
+
+---
+
+## 📜 Giấy phép
+
+Dự án tuân theo giấy phép **Apache 2.0** của Google CTS.
+
+---
+
+**Tác giả:** Ngo Viet Trung
+**Phiên bản:** 1.0.0  
+**Ngày cập nhật:** 2025-10-29  
