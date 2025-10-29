@@ -192,7 +192,7 @@ python3 main.py cts-runner --cmd "run cts -m CtsMediaTestCases"
 
 ---
 
-### 6️⃣ Sinh báo cáo từ nhiều kết quả CTS
+### 6️⃣ Sinh báo cáo từ nhiều kết quả CTS (number of modules must be the same)
 
 ```bash
 python3 main.py multi-gen-report [tùy chọn]
