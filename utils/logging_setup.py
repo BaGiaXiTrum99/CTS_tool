@@ -120,7 +120,7 @@ def configure_logger(level_str: str, log_file: str = "logs/cts.log"):
             print(f"Warning: Could not delete log file {f}: {e}")
 
     file_handler = RotatingFileHandler(
-        log_file, maxBytes=20 * 1024 * 1024, backupCount=5, encoding='utf-8'
+        log_file, maxBytes=20 * 1024 * 1024, backupCount=10, encoding='utf-8'
     )
     file_handler.setFormatter(formatter)
     app_logger.addHandler(file_handler)
